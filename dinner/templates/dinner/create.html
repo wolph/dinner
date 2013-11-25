@@ -1,0 +1,10 @@
+{% extends 'dinner/base.html' %}
+{% import 'dinner/_macros.html' as dinner_macros %}
+
+{% block body %}
+
+{% for field in form %}
+    {{ dinner_macros.render_field(field) }}
+{% endfor %}
+
+{% endblock body %}

@@ -1,0 +1,44 @@
+{% extends 'dinner/base.html' %}
+
+{% import 'dinner/_macros.html' as dinner_macros %}
+
+{% block body %}
+{{ super() }}
+
+<form method="post" action="{{ request.path }}" class="form-inline" role="form">
+    <div class="form-group">
+        {{ dinner_macros.render_field(form.name) }}
+    </div>
+    <div class="form-group">
+        {{ dinner_macros.render_field(form.email) }}
+    </div>
+    <div class="form-group">
+        {{ dinner_macros.render_field(form.comment) }}
+    </div>
+    <div id="errors" class="help-block">&nbsp;</div>
+
+    <div>
+        <table class="table">
+            <tr>
+                <th>{{ _('Datum') }}</th>
+                <th>{{ _('Kok(s)') }}</th>
+                <th>{{ _('Keuze') }}</th>
+            </tr>
+
+            {% for dinner in form.dinners %}
+            <tr>
+                <td rowspan="2" title="{{ dinner.date }}">{{ dinner.date.strftime('%A') }}</td>
+                <td>{{ dinner.get_cooks() }}</td>
+                <td>{{ dinner.field }}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">{{ dinner.get_description() }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</form>
+
+{% endblock body %}
+

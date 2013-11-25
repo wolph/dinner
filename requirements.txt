@@ -1,0 +1,7 @@
+-f http://c.pypi.python.org/simple
+Django==1.6
+anyjson==0.3.3
+django-utils==0.0.2
+django-utils2==1.5.1
+python-utils==1.5.2
+wsgiref==0.1.2

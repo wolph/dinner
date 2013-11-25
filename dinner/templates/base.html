@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>{% block title %}{% endblock title %}</title>
+
+{% block head %}
+{% endblock head %}
+
+<!-- Bootstrap core CSS -->
+{% compress css %}
+<link href="{{ STATIC_URL }}bootstrap/css/bootstrap.css" type="text/css" rel="stylesheet">
+<link href="{{ STATIC_URL }}tagmanager/tagmanager.css" type="text/css" rel="stylesheet">
+<style type="text/css">
+/*
+div.btn-group[data-toggle=buttons-radio] input[type=radio] {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
+*/
+</style>
+{% endcompress css %}
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+      <script src="{% static 'js/html5shiv.js' %}"></script>
+      <script src="{% static 'js/respond.min.js' %}"></script>
+    <![endif]-->
+</head>
+
+<body>
+<div class="container">
+    <div class="header">
+        {% block header %}
+        <ul class="nav nav-pills pull-right">
+            <li class="active"><a href="{% url 'dinner:index' %}">Home</a></li>
+        </ul>
+        <h3 class="text-muted">{% block body_title %}{% endblock body_title %}</h3>
+        {% endblock header %}
+    </div>
+
+    {% block body %}
+    {% endblock body %}
+
+    <div class="footer">
+        <p><a href="http://wol.ph/">&copy; Wolph 2013</a></p>
+    </div>
+
+</div>
+
+{% block footer %}
+{% compress js %}
+{% block footer_js %}
+<script src="{{ STATIC_URL }}jquery/jquery-2.0.3.js" type="text/javascript" charset="utf-8"></script>
+<script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+<script src="{{ STATIC_URL }}parsley/parsley.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="{{ STATIC_URL }}tagmanager/tagmanager.js" type="text/javascript" charset="utf-8"></script>
+{% endblock footer_js %}
+
+<script type="text/javascript" charset="utf-8">
+$.fn.parsley.defaults = {
+  // basic data-api overridable properties here..
+  inputs: 'input, textarea, select'           // Default supported inputs.
+  , excluded: 'input[type=hidden], :disabled' // Do not validate input[type=hidden] & :disabled.
+  , trigger: false                            // $.Event() that will trigger validation. eg: keyup, change..
+  , animate: true                             // fade in / fade out error messages
+  , animateDuration: 300                      // fadein/fadout ms time
+  , focus: 'first'                            // 'fist'|'last'|'none' which error field would have focus first on form validation
+  , validationMinlength: 3                    // If trigger validation specified, only if value.length > validationMinlength
+  , successClass: 'has-success'           // Class name on each valid input
+  , errorClass: 'has-error'               // Class name on each invalid input
+  , errorMessage: false                       // Customize an unique error message showed if one constraint fails
+  , validators: {}                            // Add your custom validators functions
+  , showErrors: true                          // Set to false if you don't want Parsley to display error messages
+  , messages: {}                              // Add your own error messages here
+ 
+  //some quite advanced configuration here..
+  , validateIfUnchanged: false                                          // false: validate once by field value change
+  , errors: {
+      classHandler: function ( elem, isRadioOrCheckbox ) {
+        // specify where parsley error-success classes are set
+        return $(elem).parents(".form-group");
+      }
+    , container: function ( elem, isRadioOrCheckbox ) {}
+    , errorsWrapper: '<span class="help-block"></span>'                                        // do not set an id for this elem, it would have an auto-generated id
+    , errorElem: '<span></span>'                                            // each field constraint fail in an li
+    }
+  , listeners: {
+      onFieldValidate: function ( elem, ParsleyForm ) { return false; } // Executed on validation. Return true to ignore field validation
+    , onFormSubmit: function ( isFormValid, event, ParsleyForm ) {}     // Executed once on form validation
+    , onFieldError: function ( elem, constraints, ParsleyField ) {}     // Executed when a field is detected as invalid
+    , onFieldSuccess: function ( elem, constraints, ParsleyField ) {}   // Executed when a field passes validation
+  }
+};
+$('form').parsley({ 
+    errors: {
+        classHandler: function (element) {
+            return $(element).parent().parent();
+        },
+        container: function (element) {
+            var $container = $('#errors');
+            if ($container.length === 0) {
+                $container = $("<span></span>").insertAfter(element);
+            };
+            return $container;
+        }
+    }
+});
+
+jQuery('#cooks').tagsManager();
+</script>
+{% endcompress js %}
+
+{% endblock footer %}
+
+</body>
+</html>

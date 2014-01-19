@@ -64,18 +64,20 @@ div.btn-group[data-toggle=buttons-radio] input[type=radio] {
 <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
 <script src="{{ STATIC_URL }}parsley/parsley.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="{{ STATIC_URL }}tagmanager/tagmanager.js" type="text/javascript" charset="utf-8"></script>
-{% endblock footer_js %}
-
+<script src="{{ STATIC_URL }}webshim/extras/modernizr-custom.js" type="text/javascript" charset="utf-8"></script>
+<script src="{{ STATIC_URL }}webshim/polyfiller.js" type="text/javascript" charset="utf-8"></script>
+<script src="{{ STATIC_URL }}js/jQuery.unserializeForm.js" type="text/javascript" charset="utf-8"></script>
+<script src="{{ STATIC_URL }}js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8">
 $.fn.parsley.defaults = {
   // basic data-api overridable properties here..
   inputs: 'input, textarea, select'           // Default supported inputs.
   , excluded: 'input[type=hidden], :disabled' // Do not validate input[type=hidden] & :disabled.
-  , trigger: false                            // $.Event() that will trigger validation. eg: keyup, change..
+  , trigger: 'keyup change'                   // $.Event() that will trigger validation. eg: keyup, change..
   , animate: true                             // fade in / fade out error messages
   , animateDuration: 300                      // fadein/fadout ms time
   , focus: 'first'                            // 'fist'|'last'|'none' which error field would have focus first on form validation
-  , validationMinlength: 3                    // If trigger validation specified, only if value.length > validationMinlength
+  , validationMinlength: 0                    // If trigger validation specified, only if value.length > validationMinlength
   , successClass: 'has-success'           // Class name on each valid input
   , errorClass: 'has-error'               // Class name on each invalid input
   , errorMessage: false                       // Customize an unique error message showed if one constraint fails
@@ -84,7 +86,7 @@ $.fn.parsley.defaults = {
   , messages: {}                              // Add your own error messages here
  
   //some quite advanced configuration here..
-  , validateIfUnchanged: false                                          // false: validate once by field value change
+  , validateIfUnchanged: true                 // false: validate once by field value change
   , errors: {
       classHandler: function ( elem, isRadioOrCheckbox ) {
         // specify where parsley error-success classes are set
@@ -107,17 +109,26 @@ $('form').parsley({
             return $(element).parent().parent();
         },
         container: function (element) {
-            var $container = $('#errors');
+            var $container = element.parent().find(".help-block");
             if ($container.length === 0) {
-                $container = $("<span></span>").insertAfter(element);
+                $container = $("<span class='help-inline'></span>").insertAfter(element);
             };
             return $container;
         }
     }
 });
 
+$.ajaxSetup({
+    crossDomain: false,
+    beforeSend: function(xhr, settings) {
+        if (!(/^(GET|HEAD|OPTIONS|TRACE)$/.test(settings.type))){
+            xhr.setRequestHeader('X-CSRFToken', $.cookie('csrftoken'));
+        }
+    }
+});
 jQuery('#cooks').tagsManager();
 </script>
+{% endblock footer_js %}
 {% endcompress js %}
 
 {% endblock footer %}

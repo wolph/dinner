@@ -2,18 +2,20 @@ import models
 from django.contrib import admin
 from django.conf import settings
 from django.utils import functional
+from tags_input import admin as tags_input_admin
+import reversion
 
 
-class CourseAdmin(admin.ModelAdmin):
-    list_display = (u'id', 'dinner', 'name', 'number', 'description')
+class CourseAdmin(reversion.VersionAdmin):
+    list_display = ('name', 'default')
+    list_editable = ('default',)
     list_filter = ('dinner',)
     search_fields = ('name',)
-    list_editable = ['name', 'number', 'description']
 
 
 class CourseInline(admin.TabularInline):
     model = models.Course
-    extra = len(settings.DEFAULT_DINER_COURSES) + 2
+    extra = len(settings.DEFAULT_DINNER_COURSES) + 2
 
     def get_extra(self, request, obj=None, **kwargs):
         if obj and obj.courses.count():
@@ -24,7 +26,7 @@ class CourseInline(admin.TabularInline):
     def get_formset(self, request, obj=None, **kwargs):
         initial = []
         if request.method == 'GET' and (not obj or not obj.courses.count()):
-            for i, course in enumerate(settings.DEFAULT_DINER_COURSES, 1):
+            for i, course in enumerate(settings.DEFAULT_DINNER_COURSES, 1):
                 for k, v in course.iteritems():
                     initial.append({
                         'number': i,
@@ -37,26 +39,28 @@ class CourseInline(admin.TabularInline):
         return formset
 
 
-class DinnerAdmin(admin.ModelAdmin):
-    inlines = [CourseInline]
-    list_display = (u'id', 'name', 'description', 'date', 'price')
-    list_filter = ('date',)
+class DinnerAdmin(reversion.VersionAdmin, tags_input_admin.TagsInputAdmin):
+    list_display = ('date', 'get_cooks', 'get_courses', 'description', 'price',
+                    'cost',)
+    list_filter = ('date', 'courses')
     raw_id_fields = ('cooks',)
-    search_fields = ('name',)
-    list_editable = ['name', 'description', 'price']
+    search_fields = ('description', 'cooks__username', 'courses__name')
+    list_editable = ['description', 'price']
 
     def add_view(self, request, form_url='', extra_context=None):
         data = request.GET.copy()
-        data.setdefault('cooks', str(request.user.pk))
+        data.setdefault('cooks', str(request.user.username))
+        data.setdefault('courses', ','.join(
+            models.Course.objects.default().values_list('name', flat=True)))
         request.GET = data
         return super(DinnerAdmin, self).add_view(
             request=request, form_url=form_url, extra_context=extra_context)
 
 
-class ReservationAdmin(admin.ModelAdmin):
+class ReservationAdmin(reversion.VersionAdmin):
     list_display = (u'id', 'user', 'name', 'email', 'comments', 'paid')
     list_filter = ('user',)
-    raw_id_fields = ('courses',)
+    raw_id_fields = ('course', 'dinner')
     search_fields = ('name',)
 
 

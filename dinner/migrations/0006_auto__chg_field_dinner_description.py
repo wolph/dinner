@@ -8,30 +8,14 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Deleting field 'Dinner.end_date'
-        db.delete_column(u'dinner_dinner', 'end_date')
 
-        # Adding field 'Dinner.date'
-        db.add_column(u'dinner_dinner', 'date',
-                      self.gf('django.db.models.fields.DateField')(default=datetime.date.today),
-                      keep_default=False)
-
-
-        # Changing field 'Dinner.name'
-        db.alter_column(u'dinner_dinner', 'name', self.gf('django.db.models.fields.CharField')(max_length=100, null=True))
+        # Changing field 'Dinner.description'
+        db.alter_column(u'dinner_dinner', 'description', self.gf('django.db.models.fields.TextField')())
 
     def backwards(self, orm):
-        # Adding field 'Dinner.end_date'
-        db.add_column(u'dinner_dinner', 'end_date',
-                      self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime(2013, 11, 14, 0, 0)),
-                      keep_default=False)
 
-        # Deleting field 'Dinner.date'
-        db.delete_column(u'dinner_dinner', 'date')
-
-
-        # Changing field 'Dinner.name'
-        db.alter_column(u'dinner_dinner', 'name', self.gf('django.db.models.fields.CharField')(default=datetime.datetime(2013, 11, 14, 0, 0), max_length=100))
+        # Changing field 'Dinner.description'
+        db.alter_column(u'dinner_dinner', 'description', self.gf('django.db.models.fields.TextField')(null=True))
 
     models = {
         u'auth.group': {
@@ -71,26 +55,27 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         u'dinner.course': {
-            'Meta': {'object_name': 'Course'},
-            'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'dinner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dinner.Dinner']"}),
+            'Meta': {'unique_together': "(('name',),)", 'object_name': 'Course'},
+            'default': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'number': ('django.db.models.fields.IntegerField', [], {})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         u'dinner.dinner': {
-            'Meta': {'object_name': 'Dinner'},
+            'Meta': {'unique_together': "(('date',),)", 'object_name': 'Dinner'},
             'cooks': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.User']", 'symmetrical': 'False'}),
+            'cost': ('django.db.models.fields.DecimalField', [], {'default': "'2.3'", 'max_digits': '8', 'decimal_places': '2'}),
+            'courses': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'dinner'", 'symmetrical': 'False', 'to': u"orm['dinner.Course']"}),
             'date': ('django.db.models.fields.DateField', [], {'default': 'datetime.date.today'}),
-            'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'description': ('django.db.models.fields.TextField', [], {'default': "''", 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'price': ('django.db.models.fields.DecimalField', [], {'default': '4', 'max_digits': '8', 'decimal_places': '2'})
+            'price': ('django.db.models.fields.DecimalField', [], {'default': "'4'", 'max_digits': '8', 'decimal_places': '2'})
         },
         u'dinner.reservation': {
             'Meta': {'object_name': 'Reservation'},
             'comments': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'courses': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['dinner.Course']", 'symmetrical': 'False'}),
+            'course': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dinner.Course']"}),
+            'dinner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dinner.Dinner']"}),
+            'discount': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '8', 'decimal_places': '2'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),

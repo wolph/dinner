@@ -5,3 +5,4 @@ django-utils==0.0.2
 django-utils2==1.5.1
 python-utils==1.5.2
 wsgiref==0.1.2
+django-reversion==1.8.0

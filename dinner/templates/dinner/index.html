@@ -5,40 +5,174 @@
 {% block body %}
 {{ super() }}
 
-<form method="post" action="{{ request.path }}" class="form-inline" role="form">
+<form id="dinner_signup" method="post" action="{{ request.path }}" class="form" role="form">
+    {% csrf_token %}
+    <h3>Inschrijven</h3>
+
     <div class="form-group">
-        {{ dinner_macros.render_field(form.name) }}
+        {{ dinner_macros.render_field(create_form.name) }}
     </div>
     <div class="form-group">
-        {{ dinner_macros.render_field(form.email) }}
+        {{ dinner_macros.render_field(create_form.email) }}
     </div>
     <div class="form-group">
-        {{ dinner_macros.render_field(form.comment) }}
+        {{ dinner_macros.render_field(create_form.comment) }}
     </div>
-    <div id="errors" class="help-block">&nbsp;</div>
 
     <div>
-        <table class="table">
+        {% if create_form.errors %}
+            <div class="alert alert-danger">
+            {% for field, errors in create_form.errors.iteritems() %}
+                {{ create_form[field].label }}: {{ ', '.join(errors) }}<br>
+            {% endfor %}
+            </div>
+        {% endif %}
+
+        <table class="table" id="courses">
             <tr>
                 <th>{{ _('Datum') }}</th>
                 <th>{{ _('Kok(s)') }}</th>
                 <th>{{ _('Keuze') }}</th>
             </tr>
 
-            {% for dinner in form.dinners %}
+            {% for dinner in create_form.dinners %}
             <tr>
                 <td rowspan="2" title="{{ dinner.date }}">{{ dinner.date.strftime('%A') }}</td>
                 <td>{{ dinner.get_cooks() }}</td>
-                <td>{{ dinner.field }}
+                <td>{{ dinner.field(disabled=dinner.is_expired, button={
+                    'data-loading-text': 'Signing up...',
+                    'data-target': '#signup_%s' % dinner.date,
+                    'data-date': dinner.date,
+                }) }}
                 </td>
             </tr>
             <tr>
-                <td colspan="2">{{ dinner.get_description() }}</td>
+                <td colspan="2">{{ dinner.description|default('') }}</td>
             </tr>
             {% endfor %}
         </table>
+    </div>
+
+    <div id="signup_tabs">
+        <h3>{{ _('Inschrijvingen') }}</h3>
+        <ul class="nav nav-tabs">
+        {% for dinner_date, reservations in reservations %}
+        <li {% if date == dinner_date %}class="active"{% endif %}>
+            <a 
+                href="#signup_{{ dinner_date }}"
+                data-toggle="tab"
+                title="{{ dinner_date }}">
+                {{ dinner_date.strftime('%A') }}
+            </a>
+        </li>
+        {% endfor %}
+        </ul>
+
+        <div class="tab-content">
+        {% for dinner_date, reservations in reservations %}
+        <div class="tab-pane fade {% if date == dinner_date %}in active{% endif %}" id="signup_{{ dinner_date }}">
+            <table class="table">
+                <tr>
+                    <th>{{ _('Datum') }}</th>
+                    <th>{{ _('Naam') }}</th>
+                    <th>{{ _('Keuze') }}</th>
+                    <th>{{ _('Opmerkingen') }}</th>
+                    <th>{{ _('Verwijderen') }}</th>
+                </tr>
+
+                {% for reservation in reservations %}
+                <tr>
+                    <td title="{{ dinner_date }}">{{ dinner_date.strftime('%A') }}</td>
+                    <td>{{ reservation.name }}</td>
+                    <td>{{ reservation.course }}</td>
+                    <td>{{ reservation.comments }}</td>
+                    <td>{{ reservation.field(
+                        disabled=(
+                            reservation.dinner.is_expired 
+                            or (
+                                reservation not in user_reservations
+                                and not request.user.is_staff
+                            )
+                        ),
+                        button={
+                            'data-loading-text': 'Removing...',
+                            'autocomplete': 'off',
+                        },
+                    ) }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% endfor %}
+        </div>
+        </ul>
     </div>
 </form>
 
 {% endblock body %}
 
+{% block footer_js %}
+{{ super() }}
+
+<script type="text/javascript" charset="utf-8">
+$(function(){
+    var key = '{{ app }}.{{ view }}.form';
+    var state = localStorage.getItem(key)
+    var form = $('form#dinner_signup');
+    if(state){
+        try{
+            form.unserializeForm(state, {'override-values': false});
+            /* Apparently parsley needs some warmup time */
+            window.setTimeout(function(){
+                $('form :input:visible').trigger('change');
+            }, 100);
+        }catch(e){
+            console.log('e', e);
+            console.log('state', state);
+        }
+    }
+
+    function saveState(){
+        localStorage.setItem(key, form.serialize());
+    }
+
+    form.find(':input:visible').on('keyup', saveState).on('change', saveState);
+
+    $('button[data-target]').on('click', function(e){
+        var target = $(this).data('target');
+        $('form').attr('action', target);
+        $('ul.nav-tabs li a[href="' + target + '"]').tab('show');
+    });
+
+    if(document.location.hash)
+        $('ul.nav-tabs li a[href="' + document.location.hash + '"]').tab('show');
+    
+    $('#signup_tabs ul li a').click(function(e){
+        document.location.href = this.href;
+        $(this).tab('show');
+    });
+
+    $('#courses, #signup_tabs').on('click', 'button.btn', function(e){
+        var $this = $(this);
+        var target = '#' + $('div.tab-pane.active').attr('id');
+        var data = form.serializeArray();
+        data.push({name: this.name, value: this.value});
+        $this.button('loading');
+
+        $('form').attr('action', target);
+        $.ajax({
+            type: 'POST',
+            url: target,
+            data: data, 
+            success: function(data){
+                $(target).html($(data).find(target));
+                $this.button('reset');
+            },
+            dataType: 'html'
+        });
+        e.preventDefault();
+    }); 
+});
+</script>
+{% endblock footer_js %}

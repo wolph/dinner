@@ -11,12 +11,15 @@ class Migration(SchemaMigration):
         # Adding model 'Dinner'
         db.create_table(u'dinner_dinner', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('end_date', self.gf('django.db.models.fields.DateTimeField')()),
-            ('price', self.gf('django.db.models.fields.DecimalField')(default=4, max_digits=8, decimal_places=2)),
+            ('date', self.gf('django.db.models.fields.DateField')(default=datetime.date.today)),
+            ('price', self.gf('django.db.models.fields.DecimalField')(default='4', max_digits=8, decimal_places=2)),
+            ('cost', self.gf('django.db.models.fields.DecimalField')(default='2.29999999999999982236431605997495353221893310546875', max_digits=8, decimal_places=2)),
         ))
         db.send_create_signal(u'dinner', ['Dinner'])
+
+        # Adding unique constraint on 'Dinner', fields ['date']
+        db.create_unique(u'dinner_dinner', ['date'])
 
         # Adding M2M table for field cooks on 'Dinner'
         m2m_table_name = db.shorten_name(u'dinner_dinner_cooks')
@@ -30,12 +33,21 @@ class Migration(SchemaMigration):
         # Adding model 'Course'
         db.create_table(u'dinner_course', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('dinner', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['dinner.Dinner'])),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('number', self.gf('django.db.models.fields.IntegerField')()),
-            ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
         ))
         db.send_create_signal(u'dinner', ['Course'])
+
+        # Adding unique constraint on 'Course', fields ['name']
+        db.create_unique(u'dinner_course', ['name'])
+
+        # Adding M2M table for field dinner on 'Course'
+        m2m_table_name = db.shorten_name(u'dinner_course_dinner')
+        db.create_table(m2m_table_name, (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('course', models.ForeignKey(orm[u'dinner.course'], null=False)),
+            ('dinner', models.ForeignKey(orm[u'dinner.dinner'], null=False))
+        ))
+        db.create_unique(m2m_table_name, ['course_id', 'dinner_id'])
 
         # Adding model 'Reservation'
         db.create_table(u'dinner_reservation', (
@@ -44,21 +56,21 @@ class Migration(SchemaMigration):
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('email', self.gf('django.db.models.fields.EmailField')(max_length=75)),
             ('comments', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('dinner', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['dinner.Dinner'])),
+            ('course', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['dinner.Course'])),
             ('paid', self.gf('django.db.models.fields.DecimalField')(default=0, max_digits=8, decimal_places=2)),
+            ('discount', self.gf('django.db.models.fields.DecimalField')(default=0, max_digits=8, decimal_places=2)),
         ))
         db.send_create_signal(u'dinner', ['Reservation'])
 
-        # Adding M2M table for field courses on 'Reservation'
-        m2m_table_name = db.shorten_name(u'dinner_reservation_courses')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('reservation', models.ForeignKey(orm[u'dinner.reservation'], null=False)),
-            ('course', models.ForeignKey(orm[u'dinner.course'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['reservation_id', 'course_id'])
-
 
     def backwards(self, orm):
+        # Removing unique constraint on 'Course', fields ['name']
+        db.delete_unique(u'dinner_course', ['name'])
+
+        # Removing unique constraint on 'Dinner', fields ['date']
+        db.delete_unique(u'dinner_dinner', ['date'])
+
         # Deleting model 'Dinner'
         db.delete_table(u'dinner_dinner')
 
@@ -68,11 +80,11 @@ class Migration(SchemaMigration):
         # Deleting model 'Course'
         db.delete_table(u'dinner_course')
 
+        # Removing M2M table for field dinner on 'Course'
+        db.delete_table(db.shorten_name(u'dinner_course_dinner'))
+
         # Deleting model 'Reservation'
         db.delete_table(u'dinner_reservation')
-
-        # Removing M2M table for field courses on 'Reservation'
-        db.delete_table(db.shorten_name(u'dinner_reservation_courses'))
 
 
     models = {
@@ -113,26 +125,26 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         u'dinner.course': {
-            'Meta': {'object_name': 'Course'},
-            'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'dinner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dinner.Dinner']"}),
+            'Meta': {'unique_together': "(('name',),)", 'object_name': 'Course'},
+            'dinner': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'courses'", 'symmetrical': 'False', 'to': u"orm['dinner.Dinner']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'number': ('django.db.models.fields.IntegerField', [], {})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         u'dinner.dinner': {
-            'Meta': {'object_name': 'Dinner'},
-            'cooks': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.User']", 'symmetrical': 'False'}),
+            'Meta': {'unique_together': "(('date',),)", 'object_name': 'Dinner'},
+            'cooks': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.User']", 'symmetrical': 'False', 'blank': 'True'}),
+            'cost': ('django.db.models.fields.DecimalField', [], {'default': "'2.29999999999999982236431605997495353221893310546875'", 'max_digits': '8', 'decimal_places': '2'}),
+            'date': ('django.db.models.fields.DateField', [], {'default': 'datetime.date.today'}),
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'end_date': ('django.db.models.fields.DateTimeField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'price': ('django.db.models.fields.DecimalField', [], {'default': '4', 'max_digits': '8', 'decimal_places': '2'})
+            'price': ('django.db.models.fields.DecimalField', [], {'default': "'4'", 'max_digits': '8', 'decimal_places': '2'})
         },
         u'dinner.reservation': {
             'Meta': {'object_name': 'Reservation'},
             'comments': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'courses': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['dinner.Course']", 'symmetrical': 'False'}),
+            'course': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dinner.Course']"}),
+            'dinner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dinner.Dinner']"}),
+            'discount': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '8', 'decimal_places': '2'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),

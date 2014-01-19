@@ -30,3 +30,12 @@ def get_days_from(date=None, days=7):
         count=days,
     ))
 
+
+def get_days(start_date, end_date):
+    '''Get a datetime object for every day of the week'''
+    return [day.date() for day in rrule.rrule(
+        rrule.DAILY,
+        start_date,
+        until=end_date,
+    )]
+

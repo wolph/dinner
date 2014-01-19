@@ -7,7 +7,8 @@ https://docs.djangoproject.com/en/1.6/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 '''
-
+import datetime
+import decimal
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(__file__)
@@ -41,7 +42,8 @@ INSTALLED_APPS = (
     'django_utils',
     'coffin',
     'compressor',
-    'debug_toolbar',
+    'tags_input',
+    'reversion',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -51,6 +53,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'reversion.middleware.RevisionMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
@@ -66,6 +69,10 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+    #'default': {
+    #    'ENGINE': 'django.db.backends.postgresql',
+    #    'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    #}
 }
 
 # Internationalization
@@ -107,23 +114,119 @@ COMPRESS_PRECOMPILERS = (
     ('text/x-scss', 'sass --scss {infile} {outfile}'),
 )
 
-DEFAULT_DINER_PRICE = 4
-DEFAULT_DINER_COURSES = [
-# Stuff for the future maybe, just in case we are ever going to offer
-# desert/starter choices. For now we'll skip it for simplicity
-#    {'Voorgerecht': ''},
-#    {'Nagerecht': ''},
-    {
-        'Hoofdgerecht vlees': '',
-        'Hoofdgerecht vego': '',
-    },
+DEFAULT_DINNER_DAYS = 7
+DEFAULT_DINNER_PRICE = decimal.Decimal('4')
+DEFAULT_DINNER_COST = decimal.Decimal('2.3')
+DEFAULT_DINNER_COURSES = [
+    'vlees',
+    'vego',
 ]
+DINNER_SIGNUP_UNTIL = datetime.time(20)
+
+TAGS_INPUT_MAPPINGS = {
+    'dinner.Dinner': {
+        'field': 'date',
+    },
+    'dinner.Course': {
+        'field': 'name',
+        'create_missing': True,
+    },
+    'auth.User': {
+        #'fields': ('first_name', 'last_name', 'username'),
+        'field': 'username',
+    },
+}
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 365
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
 DJANGO_UTILS_USE_JINJA = True
+
+INTERNAL_IPS = (
+    '127.0.0.1',
+)
 
 '''Monkeypatch Django to mimic Jinja2 behaviour'''
 from django.utils import safestring
 if not hasattr(safestring, '__html__'):
     safestring.SafeString.__html__ = lambda self: str(self)
     safestring.SafeUnicode.__html__ = lambda self: unicode(self)
+
+if DEBUG:
+    def show_toolbar(request):
+        if request.META['REMOTE_ADDR'] in INTERNAL_IPS:
+            return True
+        elif request.user.is_staff:
+            return True
+        else:
+            return False
+
+    #MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
+    INSTALLED_APPS += (
+        'devserver',
+        #'debug_toolbar',
+        #'cache_toolbar',
+        #'template_timings_panel',
+    )
+    DEBUG_TOOLBAR_CONFIG = {
+        'INTERCEPT_REDIRECTS': False,
+        'SHOW_TOOLBAR_CALLBACK': show_toolbar,
+    }
+    DEBUG_TOOLBAR_PANELS = (
+        'debug_toolbar.panels.version.VersionDebugPanel',
+        'debug_toolbar.panels.timer.TimerDebugPanel',
+        'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
+        'debug_toolbar.panels.headers.HeaderDebugPanel',
+        'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
+        'debug_toolbar.panels.template.TemplateDebugPanel',
+        'debug_toolbar.panels.sql.SQLDebugPanel',
+        'debug_toolbar.panels.signals.SignalDebugPanel',
+        'debug_toolbar.panels.logger.LoggingPanel',
+        #'debug_toolbar.panels.profiling.ProfilingDebugPanel',
+        #'template_timings_panel.panels.TemplateTimings.TemplateTimings',
+        #'cache_toolbar.panels.BasePanel',
+    )
+
+    #INSTALLED_APPS += ('devserver',)
+    DEVSERVER_MODULES = (
+        #'devserver.modules.sql.SQLRealTimeModule',
+        'devserver.modules.sql.SQLSummaryModule',
+        #'devserver.modules.profile.ProfileSummaryModule',
+
+        # Modules not enabled by default
+        #'devserver.modules.ajax.AjaxDumpModule',
+        'devserver.modules.profile.MemoryUseModule',
+        'devserver.modules.cache.CacheSummaryModule',
+        #'devserver.modules.profile.LineProfilerModule',
+    )
+    DEVSERVER_TRUNCATE_SQL = False
+    DEVSERVER_AUTO_PROFILE = False
+
+    import re
+    import pprint
+    import inspect
+
+    pf = pprint.pformat
+
+    def pp(*args, **kwargs):
+        '''PrettyPrint function that prints both the variable name and data'''
+        name = None
+        for line in inspect.getframeinfo(inspect.currentframe().f_back)[3]:
+            m = re.search(r'\bpp\s*\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)', line)
+            if m:
+                name = m.group(1)
+                break
+
+        if name:
+            print '# %s:' % name
+        pprint.pprint(*args, **kwargs)
+
+else:
+    pf = lambda *a, **kw: ''
+    pp = lambda *a, **kw: None
+
+import __builtin__
+__builtin__.pf = pf
+__builtin__.pp = pp
 

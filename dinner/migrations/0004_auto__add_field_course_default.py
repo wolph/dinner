@@ -8,27 +8,15 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'Reservation.discount'
-        db.add_column(u'dinner_reservation', 'discount',
-                      self.gf('django.db.models.fields.DecimalField')(default=0, max_digits=8, decimal_places=2),
+        # Adding field 'Course.default'
+        db.add_column(u'dinner_course', 'default',
+                      self.gf('django.db.models.fields.BooleanField')(default=False),
                       keep_default=False)
-
-        # Adding unique constraint on 'Course', fields ['dinner', 'name', 'number']
-        db.create_unique(u'dinner_course', ['dinner_id', 'name', 'number'])
-
-        # Adding unique constraint on 'Dinner', fields ['date']
-        db.create_unique(u'dinner_dinner', ['date'])
 
 
     def backwards(self, orm):
-        # Removing unique constraint on 'Dinner', fields ['date']
-        db.delete_unique(u'dinner_dinner', ['date'])
-
-        # Removing unique constraint on 'Course', fields ['dinner', 'name', 'number']
-        db.delete_unique(u'dinner_course', ['dinner_id', 'name', 'number'])
-
-        # Deleting field 'Reservation.discount'
-        db.delete_column(u'dinner_reservation', 'discount')
+        # Deleting field 'Course.default'
+        db.delete_column(u'dinner_course', 'default')
 
 
     models = {
@@ -69,26 +57,26 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         u'dinner.course': {
-            'Meta': {'unique_together': "(('dinner', 'name', 'number'),)", 'object_name': 'Course'},
-            'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'dinner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dinner.Dinner']"}),
+            'Meta': {'unique_together': "(('name',),)", 'object_name': 'Course'},
+            'default': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'dinner': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'courses'", 'symmetrical': 'False', 'to': u"orm['dinner.Dinner']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'number': ('django.db.models.fields.IntegerField', [], {})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         u'dinner.dinner': {
             'Meta': {'unique_together': "(('date',),)", 'object_name': 'Dinner'},
             'cooks': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.User']", 'symmetrical': 'False', 'blank': 'True'}),
+            'cost': ('django.db.models.fields.DecimalField', [], {'default': "'2.3'", 'max_digits': '8', 'decimal_places': '2'}),
             'date': ('django.db.models.fields.DateField', [], {'default': 'datetime.date.today'}),
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'price': ('django.db.models.fields.DecimalField', [], {'default': '4', 'max_digits': '8', 'decimal_places': '2'})
+            'price': ('django.db.models.fields.DecimalField', [], {'default': "'4'", 'max_digits': '8', 'decimal_places': '2'})
         },
         u'dinner.reservation': {
             'Meta': {'object_name': 'Reservation'},
             'comments': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'courses': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['dinner.Course']", 'symmetrical': 'False'}),
+            'course': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dinner.Course']"}),
+            'dinner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dinner.Dinner']"}),
             'discount': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '8', 'decimal_places': '2'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),

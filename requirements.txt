@@ -1,8 +1,21 @@
 -f http://c.pypi.python.org/simple
 Django==1.6
-anyjson==0.3.3
-django-utils==0.0.2
-django-utils2==1.5.1
-python-utils==1.5.2
-wsgiref==0.1.2
+anyjson
+django-utils2
+python-utils
 django-reversion==1.8.0
+Coffin
+Jinja2
+South==0.8.3
+ipdb
+ipython
+lxml
+pep8
+pyflakes
+sqlparse
+virtualenv
+virtualenvwrapper
+python-dateutil
+django-tags-input
+django-devserver
+distribute

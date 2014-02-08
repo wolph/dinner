@@ -202,6 +202,8 @@ if DEBUG:
     )
     DEVSERVER_TRUNCATE_SQL = False
     DEVSERVER_AUTO_PROFILE = False
+    DEVSERVER_DEFAULT_ADDR = '0.0.0.0'
+    DEVSERVER_DEFAULT_PORT = '8080'
 
     import re
     import pprint

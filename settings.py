@@ -153,6 +153,9 @@ if not hasattr(safestring, '__html__'):
     safestring.SafeString.__html__ = lambda self: str(self)
     safestring.SafeUnicode.__html__ = lambda self: unicode(self)
 
+if os.path.isfile('local_settings.py'):
+    execfile('local_settings.py')
+
 if DEBUG:
     def show_toolbar(request):
         if request.META['REMOTE_ADDR'] in INTERNAL_IPS:

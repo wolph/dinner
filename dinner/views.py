@@ -31,6 +31,8 @@ def index(request, date=datetime.date.today()):
         if reservations:
             request.session.modified = True
             return request.redirect()
+    elif create_form.errors:
+        print 'errors', create_form.errors
 
     date = max(begin_date, min(datetime.date.today(), end_date))
     reservations = models.Reservation.objects.get_days(begin_date, end_date)

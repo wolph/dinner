@@ -98,14 +98,14 @@ class DailyCourseMeta(wtforms.form.FormMeta):
 
 class ReservationCreateForm(wtforms.Form):
     __metaclass__ = DailyCourseMeta
-    name = wtformsparsleyjs.TextField(_('Name'), validators=[
+    name = wtformsparsleyjs.StringField(_('Name'), validators=[
         wtformsparsleyjs.Length(3, 100),
     ])
-    email = wtformsparsleyjs.TextField(_('Email'), validators=[
+    email = wtformsparsleyjs.StringField(_('Email'), validators=[
         wtformsparsleyjs.Email(_('Sorry, not a valid email address.')),
         wtformsparsleyjs.Length(3, 75),
     ])
-    comment = wtforms.TextField(_('Opmerkingen'))
+    comment = wtforms.StringField(_('Opmerkingen'))
 
     def __init__(self, user, dinners, formdata=None, obj=None, prefix='',
                  *args, **kwargs):

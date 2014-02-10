@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'compressor',
     'tags_input',
     'reversion',
+    'inspectdb',
 )
 
 MIDDLEWARE_CLASSES = (

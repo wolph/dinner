@@ -55,8 +55,14 @@ def index(request, date=datetime.date.today()):
         request.session.modified = True
         return request.redirect()
 
-    reservations = [(x, list(y)) for x, y in
-                    itertools.groupby(reservations, lambda r: r.dinner.date)]
+    days = utils.get_days(begin_date, end_date - datetime.timedelta(days=1))
+    reservations_per_day = dict(
+        itertools.groupby(reservations, lambda r: r.dinner.date))
+
+    reservations = []
+    for day in days:
+        reservations.append((day, list(reservations_per_day.get(day, []))))
+
     request.context['create_form'] = create_form
     request.context['remove_form'] = remove_form
     request.context['reservations'] = reservations

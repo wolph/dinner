@@ -5,7 +5,7 @@
 {% block body %}
 {{ super() }}
 
-<form id="dinner_signup" method="post" action="{{ request.path }}" class="form" role="form">
+<form id="dinner_signup" method="post" action="{{ request.path }}" class="form-horizontal" role="form">
     {% csrf_token %}
     <h3>Inschrijven</h3>
 
@@ -16,10 +16,11 @@
         {{ dinner_macros.render_field(create_form.email) }}
     </div>
     <div class="form-group">
-        {{ dinner_macros.render_field(create_form.comment) }}
+        {{ dinner_macros.render_field(create_form.comment, **{'parsley-validation-minlength': 0}) }}
     </div>
 
     <div>
+        <div id="signup_errors">
         {% if create_form.errors %}
             <div class="alert alert-danger">
             {% for field, errors in create_form.errors.iteritems() %}
@@ -27,6 +28,7 @@
             {% endfor %}
             </div>
         {% endif %}
+        </div>
 
         <table class="table" id="courses">
             <tr>
@@ -58,7 +60,7 @@
         <ul class="nav nav-tabs">
         {% for dinner_date, reservations in reservations %}
         <li {% if date == dinner_date %}class="active"{% endif %}>
-            <a 
+            <a
                 href="#signup_{{ dinner_date }}"
                 data-toggle="tab"
                 title="{{ dinner_date }}">
@@ -88,7 +90,7 @@
                     <td>{{ reservation.comments }}</td>
                     <td>{{ reservation.field(
                         disabled=(
-                            reservation.dinner.is_expired 
+                            reservation.dinner.is_expired
                             or (
                                 reservation not in user_reservations
                                 and not request.user.is_staff
@@ -121,20 +123,11 @@ $(function(){
     var state = localStorage.getItem(key)
     var form = $('form#dinner_signup');
     if(state){
-        try{
-            form.unserializeForm(state, {'override-values': false});
-            /* Apparently parsley needs some warmup time */
-            window.setTimeout(function(){
-                $('form :input:visible').trigger('change');
-            }, 100);
-        }catch(e){
-            console.log('e', e);
-            console.log('state', state);
-        }
+        form.unserializeForm(state, {'override-values': false});
     }
 
     function saveState(){
-        localStorage.setItem(key, form.serialize());
+        localStorage.setItem(key, form.find(':input:visible').serialize());
     }
 
     form.find(':input:visible').on('keyup', saveState).on('change', saveState);
@@ -147,13 +140,15 @@ $(function(){
 
     if(document.location.hash)
         $('ul.nav-tabs li a[href="' + document.location.hash + '"]').tab('show');
-    
+
     $('#signup_tabs ul li a').click(function(e){
         document.location.href = this.href;
         $(this).tab('show');
     });
 
     $('#courses, #signup_tabs').on('click', 'button.btn', function(e){
+        if(!form.parsley('validate'))return false;
+
         var $this = $(this);
         var target = '#' + $('div.tab-pane.active').attr('id');
         var data = form.serializeArray();
@@ -164,15 +159,16 @@ $(function(){
         $.ajax({
             type: 'POST',
             url: target,
-            data: data, 
+            data: data,
             success: function(data){
-                $(target).html($(data).find(target));
+                var html = $(data);
+                $(target).html(html.find(target));
                 $this.button('reset');
             },
             dataType: 'html'
         });
         e.preventDefault();
-    }); 
+    });
 });
 </script>
 {% endblock footer_js %}

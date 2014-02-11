@@ -12,11 +12,11 @@ class CourseManager(models.Manager):
 
 
 class DinnerManager(models.Manager):
-    def get_days(self, start_date, end_date):
-        days = utils.get_days(start_date, end_date)
+    def get_days(self, begin_date, end_date):
+        days = utils.get_days(begin_date, end_date)
 
         dinners = dict((d.date, d) for d in self.filter(
-            date__gte=start_date,
+            date__gte=begin_date,
             date__lt=end_date,
         ))
 
@@ -33,9 +33,9 @@ class DinnerManager(models.Manager):
 
 
 class ReservationManager(models.Manager):
-    def get_days(self, start_date, end_date):
+    def get_days(self, begin_date, end_date):
         return self.filter(
-            dinner__date__gte=start_date,
+            dinner__date__gte=begin_date,
             dinner__date__lt=end_date,
         ).order_by('dinner__date')[:]
 

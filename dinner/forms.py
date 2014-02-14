@@ -114,13 +114,13 @@ class ReservationCreateForm(wtforms.Form):
     def __init__(self, user, dinners, formdata=None, obj=None, prefix='',
                  *args, **kwargs):
         self.user = user
-        self.dinners = dinners
+        self.dinners = list(dinners)
         self.courses = {}
 
         wtforms.Form.__init__(self, formdata=formdata, obj=obj, prefix=prefix,
                               **kwargs)
 
-        for day, dinner in enumerate(dinners):
+        for day, dinner in enumerate(self.dinners):
             course_radio = getattr(self, 'course_%d' % day)
             course_radio.label.text = dinner.date.strftime('%A')
             course_radio.choices = []

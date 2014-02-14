@@ -126,6 +126,9 @@ class Reservation(base_models.NameMixin, base_models.ModelBase):
             self.dinner.date,
         )).encode('utf-8')
 
+    def __unicode__(self):
+        return '%s (%s) for %s' % (self.dinner, self.course, self.name)
+
     class Meta:
         ordering = ['dinner__date',]
 

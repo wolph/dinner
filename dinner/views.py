@@ -5,78 +5,91 @@ from . import models
 from . import utils
 import datetime
 import itertools
+import functools
+
+
+def parse_date(f):
+    @functools.wraps(f)
+    def _parse_date(*args, **kwargs):
+        date = kwargs.pop('date')
+        begin_date, end_date = utils.get_days_range(
+            days=settings.DEFAULT_DINNER_DAYS)
+
+        if isinstance(date, basestring):
+            date = datetime.date(*map(int, date.split('-')))
+        elif not isinstance(date, datetime.date):
+            date = datetime.date.today()
+
+        kwargs['date'] = max(begin_date, min(date, end_date))
+        kwargs['begin_date'] = begin_date
+        kwargs['end_date'] = end_date
+
+        return f(*args, **kwargs)
+    return _parse_date
 
 
 @view_decorators.env
-def index(request, date=datetime.date.today()):
-    begin_date, end_date = utils.get_days_range(
-        days=settings.DEFAULT_DINNER_DAYS)
+@parse_date
+def index(request, date, begin_date, end_date):
+    done = False
     data = request.POST or None
+
     if isinstance(request.session.get('reservations'), dict):
         user_reservations = request.session['reservations']
     else:
         user_reservations = request.session['reservations'] = dict()
 
-    dinners = list(models.Dinner.objects.get_days(begin_date, end_date))
+    # Create new reservations
     create_form = forms.ReservationCreateForm(
         formdata=data,
         user=request.user,
-        dinners=dinners,
+        dinners=models.Dinner.objects.get_days(begin_date, end_date),
     )
-    if data and create_form.validate():
+    if not done and data and create_form.validate():
         reservations = create_form.save()
         for reservation in reservations:
             user_reservations[reservation.pk] = reservation
 
         if reservations:
+            done = True
             request.session.modified = True
-            return request.redirect()
-    elif create_form.errors:
-        print 'errors', create_form.errors
+            if not request.ajax:
+                return request.redirect()
 
-    date = max(begin_date, min(datetime.date.today(), end_date))
+    # Get the existing reservations
     reservations = models.Reservation.objects.get_days(begin_date, end_date)
     if request.user.is_authenticated():
         for reservation in reservations:
             if reservation.user == request.user:
                 user_reservations[reservation.pk] = reservation
 
+    # Remove reservations when asked
     remove_form = forms.get_reservation_remove_form(
         reservations=reservations,
         user=request.user,
         user_reservations=user_reservations,
         formdata=data,
     )
-
-    if data and remove_form.validate():
+    if not done and data and remove_form.validate():
         for reservation in remove_form.save():
             user_reservations.pop(reservation.pk, None)
 
         request.session.modified = True
-        return request.redirect()
+        if request.ajax:
+            return request.redirect()
 
     days = utils.get_days(begin_date, end_date - datetime.timedelta(days=1))
     reservations_per_day = dict(
+        (k, list(vs)) for k, vs in
         itertools.groupby(reservations, lambda r: r.dinner.date))
-
     reservations = []
     for day in days:
-        reservations.append((day, list(reservations_per_day.get(day, []))))
+        # Get all reservations per day
+        reservations.append((day, reservations_per_day.get(day, [])))
 
     request.context['create_form'] = create_form
     request.context['remove_form'] = remove_form
     request.context['reservations'] = reservations
     request.context['user_reservations'] = set(user_reservations)
     request.context['date'] = date
-
-
-@view_decorators.env
-def remove(request):
-    data = request.POST or None
-
-    form = forms.DinnerForm(
-        formdata=data,
-    )
-
-    request.context['form'] = form
 

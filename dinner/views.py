@@ -11,7 +11,7 @@ import functools
 def parse_date(f):
     @functools.wraps(f)
     def _parse_date(*args, **kwargs):
-        date = kwargs.pop('date')
+        date = kwargs.get('date')
         begin_date, end_date = utils.get_days_range(
             days=settings.DEFAULT_DINNER_DAYS)
 

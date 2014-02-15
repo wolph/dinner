@@ -66,8 +66,7 @@
                     href="{{ url('dinner:index', date=dinner_date) }}"
                     title="{{ dinner_date }}">
                     {{ dinner_date.strftime('%A') }}
-                    <span
-                        class="label {% if reservations %}label-danger{% else %}label-default{% endif %}"
+                    <span class="label {% if reservations %}label-danger{% else %}label-default{% endif %}"
                     >{{ reservations|length }}</span>
                 </a>
             </li>
@@ -89,7 +88,7 @@
                         {% for reservation in reservations %}
                         <tr>
                             <td title="{{ dinner_date }}">{{ dinner_date.strftime('%A') }}</td>
-                            <td>{{ reservation.pk }}: {{ reservation.name }}</td>
+                            <td>{{ reservation.name }}</td>
                             <td>{{ reservation.course }}</td>
                             <td>{{ reservation.comments }}</td>
                             <td>{{ reservation.field(

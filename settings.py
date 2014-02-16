@@ -152,7 +152,7 @@ COMPRESS_PRECOMPILERS = (
     ('text/x-scss', 'sass --scss {infile} {outfile}'),
 )
 
-DEFAULT_DINNER_DAYS = 7
+DEFAULT_DINNER_DAYS = 5
 DEFAULT_DINNER_PRICE = decimal.Decimal('4')
 DEFAULT_DINNER_COST = decimal.Decimal('2.3')
 DEFAULT_DINNER_COURSES = [

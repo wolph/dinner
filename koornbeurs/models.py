@@ -1,3 +1,4 @@
+import base64
 from django.db import models
 
 
@@ -174,7 +175,7 @@ class DataForm(models.Model):
 
 class DataFormEntry(models.Model):
     data_form_entry_id = models.CharField(max_length=7L, primary_key=True, db_column=u'DataForm_entryId')
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
     username = models.CharField(max_length=85L, blank=True)
     ip_address = models.CharField(max_length=85L, db_column=u'ipAddress', blank=True)
     asset_id = models.CharField(max_length=7L, db_column=u'assetId', blank=True)
@@ -237,7 +238,7 @@ class EMSEventMetaField(models.Model):
 
 class EMSRegistrant(models.Model):
     badge_id = models.CharField(max_length=7L, primary_key=True, db_column=u'badgeId')
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
     badge_number = models.IntegerField(unique=True, db_column=u'badgeNumber')
     badge_asset_id = models.CharField(max_length=7L, db_column=u'badgeAssetId')
     ems_asset_id = models.CharField(max_length=7L, db_column=u'emsAssetId')
@@ -511,7 +512,7 @@ class GalleryFile(models.Model):
 class GalleryFileComment(models.Model):
     asset_id = models.CharField(max_length=7L, db_column=u'assetId')
     comment_id = models.CharField(max_length=7L, db_column=u'commentId')
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
     visitor_ip = models.CharField(max_length=85L, db_column=u'visitorIp', blank=True)
     creation_date = models.DateTimeField(null=True, db_column=u'creationDate', blank=True)
     body_text = models.TextField(db_column=u'bodyText', blank=True)
@@ -572,8 +573,8 @@ class InOutBoard(models.Model):
 
 
 class InOutBoardDelegates(models.Model):
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
-    delegate_user_id = models.CharField(max_length=7L, db_column=u'delegateUserId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
+    delegate_user = models.ForeignKey('User', db_column='userId')
     asset_id = models.CharField(max_length=7L, db_column=u'assetId', blank=True)
 
     class Meta:
@@ -582,7 +583,7 @@ class InOutBoardDelegates(models.Model):
 
 class InOutBoardStatus(models.Model):
     asset_id = models.CharField(max_length=7L, db_column=u'assetId', blank=True)
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
     status = models.CharField(max_length=85L, blank=True)
     date_stamp = models.IntegerField(db_column=u'dateStamp')
     message = models.TextField(blank=True)
@@ -593,7 +594,7 @@ class InOutBoardStatus(models.Model):
 
 class InOutBoardStatusLog(models.Model):
     asset_id = models.CharField(max_length=7L, db_column=u'assetId', blank=True)
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
     status = models.CharField(max_length=85L, blank=True)
     date_stamp = models.IntegerField(db_column=u'dateStamp')
     message = models.TextField(blank=True)
@@ -626,7 +627,7 @@ class Layout(models.Model):
 
 class MacroAttendEvent(models.Model):
     guid = models.CharField(max_length=7L)
-    user_id = models.CharField(max_length=7L, db_column=u'userId')
+    user = models.ForeignKey('User', db_column='userId')
 
     class Meta:
         db_table = u'MacroAttendEvent'
@@ -654,7 +655,7 @@ class MailingEmail(models.Model):
     last_updated = models.DateTimeField(null=True, db_column=u'lastUpdated', blank=True)
     bounce_reason = models.CharField(max_length=85L, db_column=u'bounceReason', blank=True)
     status = models.CharField(max_length=85L)
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
     mailing_id = models.CharField(max_length=7L, db_column=u'mailingId', blank=True)
     error_message = models.CharField(max_length=85L, db_column=u'errorMessage', blank=True)
     sent_to = models.CharField(max_length=85L, db_column=u'sentTo', blank=True)
@@ -824,7 +825,7 @@ class MatrixListingRating(models.Model):
     listing_id = models.CharField(max_length=7L, db_column=u'listingId', blank=True)
     ip_address = models.CharField(max_length=5L, db_column=u'ipAddress', blank=True)
     asset_id = models.CharField(max_length=7L, db_column=u'assetId', blank=True)
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
 
     class Meta:
         db_table = u'MatrixListing_rating'
@@ -921,7 +922,7 @@ class NewsletterCollection(models.Model):
 
 class NewsletterSubscriptions(models.Model):
     asset_id = models.CharField(max_length=7L, db_column=u'assetId')
-    user_id = models.CharField(max_length=7L, db_column=u'userId')
+    user = models.ForeignKey('User', db_column='userId')
     subscriptions = models.TextField(blank=True)
     last_time_sent = models.BigIntegerField(db_column=u'lastTimeSent')
 
@@ -1012,7 +1013,7 @@ class Photo(models.Model):
 
 class PhotoRating(models.Model):
     asset_id = models.CharField(max_length=7L, db_column=u'assetId', blank=True)
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
     visitor_ip = models.CharField(max_length=85L, db_column=u'visitorIp', blank=True)
     rating = models.IntegerField(null=True, blank=True)
 
@@ -1059,7 +1060,7 @@ class Poll(models.Model):
 
 class PollAnswer(models.Model):
     answer = models.CharField(max_length=1L, blank=True)
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
     ip_address = models.CharField(max_length=16L, db_column=u'ipAddress', blank=True)
     asset_id = models.CharField(max_length=7L, db_column=u'assetId', blank=True)
 
@@ -1090,7 +1091,7 @@ class Post(models.Model):
 
 class PostRating(models.Model):
     asset_id = models.CharField(max_length=7L, db_column=u'assetId', blank=True)
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
     ip_address = models.CharField(max_length=5L, db_column=u'ipAddress', blank=True)
     date_of_rating = models.BigIntegerField(null=True, db_column=u'dateOfRating', blank=True)
     rating = models.IntegerField()
@@ -1439,7 +1440,7 @@ class SurveyQuestionOld(models.Model):
 class SurveyResponse(models.Model):
     asset_id = models.CharField(max_length=7L, db_column=u'assetId')
     survey_response_id = models.CharField(max_length=7L, primary_key=True, db_column=u'Survey_responseId')
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
     username = models.CharField(max_length=85L, blank=True)
     ip_address = models.CharField(max_length=5L, db_column=u'ipAddress', blank=True)
     start_date = models.BigIntegerField(db_column=u'startDate')
@@ -1456,7 +1457,7 @@ class SurveyResponse(models.Model):
 class SurveyResponseOld(models.Model):
     survey_id = models.CharField(max_length=7L, db_column=u'Survey_id', blank=True)
     survey_response_id = models.CharField(max_length=7L, primary_key=True, db_column=u'Survey_responseId')
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
     username = models.CharField(max_length=85L, blank=True)
     ip_address = models.CharField(max_length=5L, db_column=u'ipAddress', blank=True)
     start_date = models.BigIntegerField(db_column=u'startDate')
@@ -1631,7 +1632,7 @@ class ThingyRecordRecord(models.Model):
     transaction_id = models.CharField(max_length=85L, db_column=u'transactionId', blank=True)
     asset_id = models.CharField(max_length=85L, db_column=u'assetId', blank=True)
     expires = models.BigIntegerField()
-    user_id = models.CharField(max_length=85L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
     fields = models.TextField(blank=True)
     is_hidden = models.IntegerField(db_column=u'isHidden')
     sent_expires_notice = models.IntegerField(db_column=u'sentExpiresNotice')
@@ -1742,7 +1743,7 @@ class Thread(models.Model):
 
 class ThreadRead(models.Model):
     thread_id = models.CharField(max_length=7L, db_column=u'threadId', blank=True)
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
 
     class Meta:
         db_table = u'Thread_read'
@@ -1920,7 +1921,7 @@ class AdSkuPurchase(models.Model):
     date_of_purchase = models.BigIntegerField(null=True, db_column=u'dateOfPurchase', blank=True)
     impressions_purchased = models.BigIntegerField(null=True, db_column=u'impressionsPurchased', blank=True)
     transaction_item_id = models.CharField(max_length=7L, db_column=u'transactionItemId', blank=True)
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
     ad_id = models.CharField(max_length=7L, db_column=u'adId', blank=True)
     stored_image = models.CharField(max_length=7L, db_column=u'storedImage', blank=True)
 
@@ -1969,7 +1970,7 @@ class Address(models.Model):
 class AddressBook(models.Model):
     address_book_id = models.CharField(max_length=7L, primary_key=True, db_column=u'addressBookId')
     session_id = models.CharField(max_length=7L, db_column=u'sessionId', blank=True)
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
     default_address_id = models.CharField(max_length=7L, db_column=u'defaultAddressId', blank=True)
 
     class Meta:
@@ -1979,7 +1980,7 @@ class AddressBook(models.Model):
 class Advertisement(models.Model):
     ad_id = models.CharField(max_length=7L, primary_key=True, db_column=u'adId')
     ad_space_id = models.CharField(max_length=7L, db_column=u'adSpaceId', blank=True)
-    owner_user_id = models.CharField(max_length=7L, db_column=u'ownerUserId', blank=True)
+    owner_user = models.ForeignKey('User', db_column='userId')
     is_active = models.IntegerField(db_column=u'isActive')
     title = models.CharField(max_length=85L, blank=True)
     type = models.CharField(max_length=5L, blank=True)
@@ -2092,7 +2093,7 @@ class AssetAspectSubscriberLog(models.Model):
     request_date = models.BigIntegerField(db_column=u'requestDate')
     confirmation_ip = models.CharField(max_length=5L, db_column=u'confirmationIp', blank=True)
     confirmation_date = models.BigIntegerField(null=True, db_column=u'confirmationDate', blank=True)
-    user_id = models.CharField(max_length=7L, db_column=u'userId')
+    user = models.ForeignKey('User', db_column='userId')
     email = models.CharField(max_length=85L)
     type = models.CharField(max_length=10L)
     anonymous = models.IntegerField()
@@ -2112,7 +2113,7 @@ class AssetData(models.Model):
     title = models.CharField(max_length=85L, blank=True)
     menu_title = models.CharField(max_length=85L, db_column=u'menuTitle', blank=True)
     url = models.CharField(max_length=85L, blank=True)
-    owner_user_id = models.CharField(max_length=7L, db_column=u'ownerUserId', blank=True)
+    owner_user = models.ForeignKey('User', db_column='userId')
     group_id_view = models.CharField(max_length=7L, db_column=u'groupIdView', blank=True)
     group_id_edit = models.CharField(max_length=7L, db_column=u'groupIdEdit', blank=True)
     synopsis = models.TextField(blank=True)
@@ -2136,7 +2137,7 @@ class AssetData(models.Model):
 
 class AssetHistory(models.Model):
     asset_id = models.CharField(max_length=7L, db_column=u'assetId', blank=True)
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
     date_stamp = models.BigIntegerField(db_column=u'dateStamp')
     action_taken = models.CharField(max_length=85L, db_column=u'actionTaken', blank=True)
     url = models.CharField(max_length=85L, blank=True)
@@ -2152,7 +2153,7 @@ class AssetIndex(models.Model):
     url = models.CharField(max_length=85L, blank=True)
     creation_date = models.BigIntegerField(null=True, db_column=u'creationDate', blank=True)
     revision_date = models.BigIntegerField(null=True, db_column=u'revisionDate', blank=True)
-    owner_user_id = models.CharField(max_length=7L, db_column=u'ownerUserId', blank=True)
+    owner_user = models.ForeignKey('User', db_column='userId')
     group_id_view = models.CharField(max_length=7L, db_column=u'groupIdView', blank=True)
     group_id_edit = models.CharField(max_length=7L, db_column=u'groupIdEdit', blank=True)
     lineage = models.CharField(max_length=85L, blank=True)
@@ -2194,18 +2195,50 @@ class AssetVersionTag(models.Model):
         db_table = u'assetVersionTag'
 
 
+class Base64Field(models.TextField):
+
+    def contribute_to_class(self, cls, name):
+        if self.db_column is None:
+            self.db_column = name
+        self.field_name = name + '_base64'
+        super(Base64Field, self).contribute_to_class(cls, self.field_name)
+        setattr(cls, name, property(self.get_data, self.set_data))
+
+    def get_data(self, obj):
+        return base64.decodestring(getattr(obj, self.field_name) + '==')
+
+    def set_data(self, obj, data):
+        setattr(obj, self.field_name, base64.encodestring(data).rstrip('=='))
+
+
+class AuthenticationQueryset(models.db.QuerySet):
+    pass
+
+
+class AuthenticationManager(models.Manager):
+    def get_queryset(self):
+        # Filter to only get the passwords, might want to expand this later but
+        # this makes joining easier
+        return AuthenticationQueryset(self.model, using=self._db).filter(
+            auth_method__exact='WebGUI',
+            field_name__exact='identifier',
+        )
+
+
 class Authentication(models.Model):
-    user_id = models.CharField(max_length=7L, db_column=u'userId')
+    user = models.ForeignKey('User', db_column='userId')
     auth_method = models.CharField(max_length=10L, db_column=u'authMethod')
     field_name = models.CharField(max_length=42L, db_column=u'fieldName')
-    field_data = models.TextField(db_column=u'fieldData', blank=True)
+    password = models.Base64Field(db_column=u'fieldData', blank=True)
+
+    objects = AuthenticationManager()
 
     class Meta:
         db_table = u'authentication'
 
 
 class BucketLog(models.Model):
-    user_id = models.CharField(max_length=7L, db_column=u'userId')
+    user = models.ForeignKey('User', db_column='userId')
     bucket = models.CharField(max_length=7L, db_column=u'Bucket')
     duration = models.IntegerField(null=True, blank=True)
     time_stamp = models.DateTimeField(null=True, db_column=u'timeStamp', blank=True)
@@ -2230,7 +2263,7 @@ class Cart(models.Model):
     session_id = models.CharField(max_length=7L, db_column=u'sessionId')
     shipping_address_id = models.CharField(max_length=7L, db_column=u'shippingAddressId', blank=True)
     shipper_id = models.CharField(max_length=7L, db_column=u'shipperId', blank=True)
-    pos_user_id = models.CharField(max_length=7L, db_column=u'posUserId', blank=True)
+    pos_user = models.ForeignKey('User', db_column='userId')
     creation_date = models.IntegerField(null=True, db_column=u'creationDate', blank=True)
 
     class Meta:
@@ -2266,7 +2299,7 @@ class DatabaseLink(models.Model):
 
 
 class DeltaLog(models.Model):
-    user_id = models.CharField(max_length=7L, db_column=u'userId')
+    user = models.ForeignKey('User', db_column='userId')
     asset_id = models.CharField(max_length=7L, db_column=u'assetId')
     delta = models.IntegerField(null=True, blank=True)
     time_stamp = models.BigIntegerField(null=True, db_column=u'timeStamp', blank=True)
@@ -2325,7 +2358,7 @@ class GroupGroupings(models.Model):
 
 class Groupings(models.Model):
     group_id = models.CharField(max_length=7L, db_column=u'groupId')
-    user_id = models.CharField(max_length=7L, db_column=u'userId')
+    user = models.ForeignKey('User', db_column='userId')
     expire_date = models.BigIntegerField(db_column=u'expireDate')
     group_admin = models.IntegerField(db_column=u'groupAdmin')
 
@@ -2410,7 +2443,7 @@ class Inbox(models.Model):
     date_stamp = models.BigIntegerField(db_column=u'dateStamp')
     completed_on = models.BigIntegerField(null=True, db_column=u'completedOn', blank=True)
     completed_by = models.CharField(max_length=7L, db_column=u'completedBy', blank=True)
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
     group_id = models.CharField(max_length=7L, db_column=u'groupId', blank=True)
     subject = models.CharField(max_length=85L, blank=True)
     message = models.TextField(blank=True)
@@ -2422,7 +2455,7 @@ class Inbox(models.Model):
 
 class InboxMessageState(models.Model):
     message_id = models.CharField(max_length=7L, db_column=u'messageId')
-    user_id = models.CharField(max_length=7L, db_column=u'userId')
+    user = models.ForeignKey('User', db_column='userId')
     is_read = models.IntegerField(db_column=u'isRead')
     replied_to = models.IntegerField(db_column=u'repliedTo')
     deleted = models.IntegerField()
@@ -2440,7 +2473,7 @@ class Incrementer(models.Model):
 
 
 class KarmaLog(models.Model):
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
     amount = models.IntegerField()
     source = models.CharField(max_length=85L, blank=True)
     description = models.TextField(blank=True)
@@ -2514,14 +2547,14 @@ class PassiveAnalyticsStatus(models.Model):
     start_date = models.DateTimeField(null=True, db_column=u'startDate', blank=True)
     end_date = models.DateTimeField(null=True, db_column=u'endDate', blank=True)
     running = models.IntegerField(null=True, blank=True)
-    user_id = models.CharField(max_length=85L, db_column=u'userId')
+    user = models.ForeignKey('User', db_column='userId')
 
     class Meta:
         db_table = u'passiveAnalyticsStatus'
 
 
 class PassiveLog(models.Model):
-    user_id = models.CharField(max_length=7L, db_column=u'userId')
+    user = models.ForeignKey('User', db_column='userId')
     asset_id = models.CharField(max_length=7L, db_column=u'assetId')
     session_id = models.CharField(max_length=7L, db_column=u'sessionId')
     time_stamp = models.BigIntegerField(null=True, db_column=u'timeStamp', blank=True)
@@ -2532,7 +2565,7 @@ class PassiveLog(models.Model):
 
 
 class PassiveProfileAOI(models.Model):
-    user_id = models.CharField(max_length=7L, db_column=u'userId')
+    user = models.ForeignKey('User', db_column='userId')
     field_id = models.CharField(max_length=7L, db_column=u'fieldId')
     value = models.CharField(max_length=33L)
     count = models.IntegerField(null=True, blank=True)
@@ -2543,7 +2576,7 @@ class PassiveProfileAOI(models.Model):
 
 class PassiveProfileLog(models.Model):
     passive_profile_log_id = models.CharField(max_length=7L, primary_key=True, db_column=u'passiveProfileLogId')
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
     session_id = models.CharField(max_length=7L, db_column=u'sessionId', blank=True)
     asset_id = models.CharField(max_length=7L, db_column=u'assetId', blank=True)
     date_of_entry = models.BigIntegerField(db_column=u'dateOfEntry')
@@ -2612,7 +2645,7 @@ class Shipper(models.Model):
 
 class ShopCredit(models.Model):
     credit_id = models.CharField(max_length=7L, primary_key=True, db_column=u'creditId')
-    user_id = models.CharField(max_length=7L, db_column=u'userId')
+    user = models.ForeignKey('User', db_column='userId')
     amount = models.FloatField()
     comment = models.TextField(blank=True)
     date_of_adjustment = models.DateTimeField(null=True, db_column=u'dateOfAdjustment', blank=True)
@@ -2626,7 +2659,7 @@ class Sku(models.Model):
     revision_date = models.BigIntegerField(db_column=u'revisionDate')
     description = models.TextField(blank=True)
     sku = models.CharField(max_length=11L)
-    vendor_id = models.CharField(max_length=7L, db_column=u'vendorId')
+    vendor = models.ForeignKey('User', db_column='vendorId')
     display_title = models.IntegerField(db_column=u'displayTitle')
     override_tax_rate = models.IntegerField(db_column=u'overrideTaxRate')
     tax_rate_override = models.FloatField(db_column=u'taxRateOverride')
@@ -2660,7 +2693,7 @@ class TaxDriver(models.Model):
 
 
 class TaxEuVatNumbers(models.Model):
-    user_id = models.CharField(max_length=7L, db_column=u'userId')
+    user = models.ForeignKey('User', db_column='userId')
     country_code = models.CharField(max_length=1L, db_column=u'countryCode')
     vat_number = models.CharField(max_length=6L, db_column=u'vatNumber')
     vies_validated = models.IntegerField(null=True, db_column=u'viesValidated', blank=True)
@@ -2719,7 +2752,7 @@ class Transaction(models.Model):
     transaction_code = models.CharField(max_length=33L, db_column=u'transactionCode', blank=True)
     status_code = models.CharField(max_length=11L, db_column=u'statusCode', blank=True)
     status_message = models.CharField(max_length=85L, db_column=u'statusMessage', blank=True)
-    user_id = models.CharField(max_length=7L, db_column=u'userId')
+    user = models.ForeignKey('User', db_column='userId')
     username = models.CharField(max_length=11L)
     amount = models.FloatField(null=True, blank=True)
     shop_credit_deduction = models.FloatField(null=True, db_column=u'shopCreditDeduction', blank=True)
@@ -2752,7 +2785,7 @@ class Transaction(models.Model):
     date_of_purchase = models.DateTimeField(null=True, db_column=u'dateOfPurchase', blank=True)
     is_recurring = models.IntegerField(null=True, db_column=u'isRecurring', blank=True)
     notes = models.TextField(blank=True)
-    cashier_user_id = models.CharField(max_length=7L, db_column=u'cashierUserId', blank=True)
+    cashier_user = models.ForeignKey('User', db_column='userId')
 
     class Meta:
         db_table = u'transaction'
@@ -2779,7 +2812,7 @@ class TransactionItem(models.Model):
     last_updated = models.DateTimeField(null=True, db_column=u'lastUpdated', blank=True)
     quantity = models.IntegerField()
     price = models.FloatField(null=True, blank=True)
-    vendor_id = models.CharField(max_length=7L, db_column=u'vendorId')
+    vendor = models.ForeignKey('User', db_column='vendorId')
     vendor_payout_status = models.CharField(max_length=3L, db_column=u'vendorPayoutStatus', blank=True)
     vendor_payout_amount = models.DecimalField(decimal_places=2, null=True, max_digits=8, db_column=u'vendorPayoutAmount', blank=True)
     tax_rate = models.DecimalField(decimal_places=3, null=True, max_digits=6, db_column=u'taxRate', blank=True)
@@ -2791,10 +2824,10 @@ class TransactionItem(models.Model):
 
 class UserInvitations(models.Model):
     invite_id = models.CharField(max_length=7L, primary_key=True, db_column=u'inviteId')
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
     date_sent = models.DateField(null=True, db_column=u'dateSent', blank=True)
     email = models.CharField(max_length=85L, blank=True)
-    new_user_id = models.CharField(max_length=7L, db_column=u'newUserId', blank=True)
+    new_user = models.ForeignKey('User', db_column='userId')
     date_created = models.DateField(null=True, db_column=u'dateCreated', blank=True)
 
     class Meta:
@@ -2802,7 +2835,7 @@ class UserInvitations(models.Model):
 
 
 class UserLoginLog(models.Model):
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
     status = models.CharField(max_length=10L, blank=True)
     time_stamp = models.IntegerField(null=True, db_column=u'timeStamp', blank=True)
     ip_address = models.CharField(max_length=42L, db_column=u'ipAddress', blank=True)
@@ -2828,7 +2861,7 @@ class UserProfileCategory(models.Model):
 
 
 class UserProfileData(models.Model):
-    user_id = models.CharField(max_length=7L, primary_key=True, db_column=u'userId')
+    user = models.ForeignKey('User', db_column='userId')
     email = models.CharField(max_length=85L, blank=True)
     first_name = models.CharField(max_length=85L, db_column=u'firstName', blank=True)
     middle_name = models.CharField(max_length=85L, db_column=u'middleName', blank=True)
@@ -2912,7 +2945,7 @@ class UserSession(models.Model):
     last_page_view = models.IntegerField(null=True, db_column=u'lastPageView', blank=True)
     admin_on = models.IntegerField(db_column=u'adminOn')
     last_ip = models.CharField(max_length=16L, db_column=u'lastIP', blank=True)
-    user_id = models.CharField(max_length=7L, db_column=u'userId', blank=True)
+    user = models.ForeignKey('User', db_column='userId')
 
     class Meta:
         db_table = u'userSession'
@@ -2936,8 +2969,16 @@ class Userpref(models.Model):
         db_table = u'userpref'
 
 
-class Users(models.Model):
-    user_id = models.CharField(max_length=7L, primary_key=True, db_column=u'userId')
+class UserManager(models.Manager):
+    def get_queryset(self):
+        return (super(UserManager, self)
+            .exclude(id__in=('1', '3'))
+            .filter(status='Active')
+        )
+
+
+class User(models.Model):
+    id = models.CharField(max_length=7L, primary_key=True, db_column=u'userId')
     username = models.CharField(unique=True, max_length=33L, blank=True)
     auth_method = models.CharField(max_length=10L, db_column=u'authMethod', blank=True)
     date_created = models.IntegerField(db_column=u'dateCreated')
@@ -2952,7 +2993,7 @@ class Users(models.Model):
 
 
 class UsersSpecialState(models.Model):
-    user_id = models.CharField(max_length=7L, db_column=u'userId')
+    user = models.ForeignKey('User', db_column='userId')
     special_state = models.CharField(max_length=10L, db_column=u'specialState')
 
     class Meta:
@@ -2960,10 +3001,10 @@ class UsersSpecialState(models.Model):
 
 
 class Vendor(models.Model):
-    vendor_id = models.CharField(max_length=7L, primary_key=True, db_column=u'vendorId')
+    id = models.CharField(max_length=7L, primary_key=True, db_column=u'vendorId')
     date_created = models.DateTimeField(null=True, db_column=u'dateCreated', blank=True)
     name = models.CharField(max_length=85L, blank=True)
-    user_id = models.CharField(max_length=7L, db_column=u'userId')
+    user = models.ForeignKey('User', db_column='userId')
     preferred_payment_type = models.CharField(max_length=85L, db_column=u'preferredPaymentType', blank=True)
     payment_information = models.TextField(db_column=u'paymentInformation', blank=True)
     payment_address_id = models.CharField(max_length=7L, db_column=u'paymentAddressId', blank=True)

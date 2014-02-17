@@ -2,12 +2,15 @@
 
 {% import 'dinner/_macros.html' as dinner_macros %}
 
+{% block header_title %}
+Eetgelegenheid - inschrijven
+{% endblock header_title %}
+
 {% block body %}
 {{ super() }}
 
 <form id="dinner_signup" method="post" action="{{ request.path }}" role="form">
     {% csrf_token %}
-    <h3>Inschrijven</h3>
 
     <div class="form-group">
         {{ dinner_macros.render_field(create_form.name) }}

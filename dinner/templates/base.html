@@ -39,14 +39,24 @@ div.btn-group[data-toggle=buttons-radio] input[type=radio] {
 
 <body>
 <div class="container-fluid">
-    <div class="header">
+    <nav class="navbar navbar-default" role="navigation">
+
+    <a class="navbar-brand" href="{% url 'dinner:index' %}">{% block header_title %}Dinner Signup{% endblock header_title %}</a>
+        <div class="navbar-header pull-right">
         {% block header %}
-        <ul class="nav nav-pills pull-right">
-            <li class="active"><a href="{% url 'dinner:index' %}">Home</a></li>
+        {% if request.user.is_authenticated() %}
+        <p class="navbar-text">Signed in as {{ request.user.first_name }} {{ request.user.last_name }}</p>
+        {% endif %}
+
+        <ul class="nav navbar-nav">
+            {% if not request.user.is_authenticated() %}
+            <li><a href="http://koornbeurs.nl/home?op=auth;method=init">Login</a></li>
+            {% endif %}
         </ul>
         <h3 class="text-muted">{% block body_title %}{% endblock body_title %}</h3>
         {% endblock header %}
-    </div>
+        </div>
+    </nav>
 
     {% block body %}
     {% endblock body %}

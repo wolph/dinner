@@ -5,7 +5,7 @@
 {% block body %}
 {{ super() }}
 
-<form id="dinner_signup" method="post" action="{{ request.path }}" class="form-horizontal" role="form">
+<form id="dinner_signup" method="post" action="{{ request.path }}" role="form">
     {% csrf_token %}
     <h3>Inschrijven</h3>
 

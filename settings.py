@@ -81,6 +81,7 @@ INSTALLED_APPS = (
     'compressor',
     'tags_input',
     'reversion',
+    'koornbeurs',
     'gunicorn',
 )
 

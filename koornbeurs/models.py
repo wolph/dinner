@@ -1,5 +1,6 @@
 import base64
 from django.db import models
+from django.contrib.auth import models as auth_models
 
 
 class AdSku(models.Model):
@@ -74,81 +75,81 @@ class Carousel(models.Model):
         db_table = u'Carousel'
 
 
-class Collaboration(models.Model):
-    asset_id = models.CharField(max_length=7L, db_column=u'assetId')
-    post_group_id = models.CharField(max_length=7L, db_column=u'postGroupId', blank=True)
-    can_start_thread_group_id = models.CharField(max_length=7L, db_column=u'canStartThreadGroupId', blank=True)
-    karma_per_post = models.IntegerField(db_column=u'karmaPerPost')
-    collaboration_template_id = models.CharField(max_length=7L, db_column=u'collaborationTemplateId', blank=True)
-    thread_template_id = models.CharField(max_length=7L, db_column=u'threadTemplateId', blank=True)
-    post_form_template_id = models.CharField(max_length=7L, db_column=u'postFormTemplateId', blank=True)
-    search_template_id = models.CharField(max_length=7L, db_column=u'searchTemplateId', blank=True)
-    notification_template_id = models.CharField(max_length=7L, db_column=u'notificationTemplateId', blank=True)
-    sort_by = models.CharField(max_length=11L, db_column=u'sortBy', blank=True)
-    sort_order = models.CharField(max_length=1L, db_column=u'sortOrder', blank=True)
-    use_preview = models.IntegerField(db_column=u'usePreview')
-    add_edit_stamp_to_posts = models.IntegerField(db_column=u'addEditStampToPosts')
-    edit_timeout = models.IntegerField(db_column=u'editTimeout')
-    attachments_per_post = models.IntegerField(db_column=u'attachmentsPerPost')
-    filter_code = models.CharField(max_length=10L, db_column=u'filterCode', blank=True)
-    use_content_filter = models.IntegerField(db_column=u'useContentFilter')
-    threads = models.IntegerField()
-    views = models.IntegerField()
-    replies = models.IntegerField()
-    rating = models.IntegerField()
-    last_post_id = models.CharField(max_length=7L, db_column=u'lastPostId', blank=True)
-    last_post_date = models.BigIntegerField(null=True, db_column=u'lastPostDate', blank=True)
-    archive_after = models.IntegerField(db_column=u'archiveAfter')
-    posts_per_page = models.IntegerField(db_column=u'postsPerPage')
-    threads_per_page = models.IntegerField(db_column=u'threadsPerPage')
-    subscription_group_id = models.CharField(max_length=7L, db_column=u'subscriptionGroupId', blank=True)
-    allow_replies = models.IntegerField(db_column=u'allowReplies')
-    display_last_reply = models.IntegerField(db_column=u'displayLastReply')
-    rich_editor = models.CharField(max_length=7L, db_column=u'richEditor', blank=True)
-    karma_rating_multiplier = models.IntegerField(db_column=u'karmaRatingMultiplier')
-    karma_spent_to_rate = models.IntegerField(db_column=u'karmaSpentToRate')
-    revision_date = models.BigIntegerField(db_column=u'revisionDate')
-    avatars_enabled = models.IntegerField(db_column=u'avatarsEnabled')
-    approval_workflow = models.CharField(max_length=7L, db_column=u'approvalWorkflow', blank=True)
-    thread_approval_workflow = models.CharField(max_length=7L, db_column=u'threadApprovalWorkflow', blank=True)
-    default_karma_scale = models.IntegerField(db_column=u'defaultKarmaScale')
-    mail_server = models.CharField(max_length=85L, db_column=u'mailServer', blank=True)
-    mail_account = models.CharField(max_length=85L, db_column=u'mailAccount', blank=True)
-    mail_password = models.CharField(max_length=85L, db_column=u'mailPassword', blank=True)
-    mail_address = models.CharField(max_length=85L, db_column=u'mailAddress', blank=True)
-    mail_prefix = models.CharField(max_length=85L, db_column=u'mailPrefix', blank=True)
-    get_mail = models.IntegerField(db_column=u'getMail')
-    get_mail_interval = models.IntegerField(db_column=u'getMailInterval')
-    get_mail_cron_id = models.CharField(max_length=7L, db_column=u'getMailCronId', blank=True)
-    visitor_cache_timeout = models.IntegerField(db_column=u'visitorCacheTimeout')
-    auto_subscribe_to_thread = models.IntegerField(db_column=u'autoSubscribeToThread')
-    require_subscription_for_email_posting = models.IntegerField(db_column=u'requireSubscriptionForEmailPosting')
-    thumbnail_size = models.IntegerField(db_column=u'thumbnailSize')
-    max_image_size = models.IntegerField(db_column=u'maxImageSize')
-    enable_post_meta_data = models.IntegerField(db_column=u'enablePostMetaData')
-    use_captcha = models.IntegerField(db_column=u'useCaptcha')
-    group_to_edit_post = models.CharField(max_length=7L, db_column=u'groupToEditPost', blank=True)
-    archive_enabled = models.IntegerField(null=True, db_column=u'archiveEnabled', blank=True)
-    post_received_template_id = models.CharField(max_length=7L, db_column=u'postReceivedTemplateId', blank=True)
-    reply_rich_editor = models.CharField(max_length=7L, db_column=u'replyRichEditor', blank=True)
-    reply_filter_code = models.CharField(max_length=10L, db_column=u'replyFilterCode', blank=True)
-
-    class Meta:
-        db_table = u'Collaboration'
-
-
-class Dashboard(models.Model):
-    asset_id = models.CharField(max_length=7L, db_column=u'assetId')
-    revision_date = models.BigIntegerField(db_column=u'revisionDate')
-    admins_group_id = models.CharField(max_length=7L, db_column=u'adminsGroupId', blank=True)
-    users_group_id = models.CharField(max_length=7L, db_column=u'usersGroupId', blank=True)
-    template_id = models.CharField(max_length=7L, db_column=u'templateId', blank=True)
-    is_initialized = models.IntegerField(db_column=u'isInitialized')
-    assets_to_hide = models.TextField(db_column=u'assetsToHide', blank=True)
-
-    class Meta:
-        db_table = u'Dashboard'
-
+# class Collaboration(models.Model):
+#     asset_id = models.CharField(max_length=7L, db_column=u'assetId')
+#     post_group = models.ForeignKey('Group', db_column='groupId')
+#     can_start_thread_group = models.ForeignKey('Group', db_column='groupId')
+#     karma_per_post = models.IntegerField(db_column=u'karmaPerPost')
+#     collaboration_template_id = models.CharField(max_length=7L, db_column=u'collaborationTemplateId', blank=True)
+#     thread_template_id = models.CharField(max_length=7L, db_column=u'threadTemplateId', blank=True)
+#     post_form_template_id = models.CharField(max_length=7L, db_column=u'postFormTemplateId', blank=True)
+#     search_template_id = models.CharField(max_length=7L, db_column=u'searchTemplateId', blank=True)
+#     notification_template_id = models.CharField(max_length=7L, db_column=u'notificationTemplateId', blank=True)
+#     sort_by = models.CharField(max_length=11L, db_column=u'sortBy', blank=True)
+#     sort_order = models.CharField(max_length=1L, db_column=u'sortOrder', blank=True)
+#     use_preview = models.IntegerField(db_column=u'usePreview')
+#     add_edit_stamp_to_posts = models.IntegerField(db_column=u'addEditStampToPosts')
+#     edit_timeout = models.IntegerField(db_column=u'editTimeout')
+#     attachments_per_post = models.IntegerField(db_column=u'attachmentsPerPost')
+#     filter_code = models.CharField(max_length=10L, db_column=u'filterCode', blank=True)
+#     use_content_filter = models.IntegerField(db_column=u'useContentFilter')
+#     threads = models.IntegerField()
+#     views = models.IntegerField()
+#     replies = models.IntegerField()
+#     rating = models.IntegerField()
+#     last_post_id = models.CharField(max_length=7L, db_column=u'lastPostId', blank=True)
+#     last_post_date = models.BigIntegerField(null=True, db_column=u'lastPostDate', blank=True)
+#     archive_after = models.IntegerField(db_column=u'archiveAfter')
+#     posts_per_page = models.IntegerField(db_column=u'postsPerPage')
+#     threads_per_page = models.IntegerField(db_column=u'threadsPerPage')
+#     subscription_group = models.ForeignKey('Group', db_column='groupId')
+#     allow_replies = models.IntegerField(db_column=u'allowReplies')
+#     display_last_reply = models.IntegerField(db_column=u'displayLastReply')
+#     rich_editor = models.CharField(max_length=7L, db_column=u'richEditor', blank=True)
+#     karma_rating_multiplier = models.IntegerField(db_column=u'karmaRatingMultiplier')
+#     karma_spent_to_rate = models.IntegerField(db_column=u'karmaSpentToRate')
+#     revision_date = models.BigIntegerField(db_column=u'revisionDate')
+#     avatars_enabled = models.IntegerField(db_column=u'avatarsEnabled')
+#     approval_workflow = models.CharField(max_length=7L, db_column=u'approvalWorkflow', blank=True)
+#     thread_approval_workflow = models.CharField(max_length=7L, db_column=u'threadApprovalWorkflow', blank=True)
+#     default_karma_scale = models.IntegerField(db_column=u'defaultKarmaScale')
+#     mail_server = models.CharField(max_length=85L, db_column=u'mailServer', blank=True)
+#     mail_account = models.CharField(max_length=85L, db_column=u'mailAccount', blank=True)
+#     mail_password = models.CharField(max_length=85L, db_column=u'mailPassword', blank=True)
+#     mail_address = models.CharField(max_length=85L, db_column=u'mailAddress', blank=True)
+#     mail_prefix = models.CharField(max_length=85L, db_column=u'mailPrefix', blank=True)
+#     get_mail = models.IntegerField(db_column=u'getMail')
+#     get_mail_interval = models.IntegerField(db_column=u'getMailInterval')
+#     get_mail_cron_id = models.CharField(max_length=7L, db_column=u'getMailCronId', blank=True)
+#     visitor_cache_timeout = models.IntegerField(db_column=u'visitorCacheTimeout')
+#     auto_subscribe_to_thread = models.IntegerField(db_column=u'autoSubscribeToThread')
+#     require_subscription_for_email_posting = models.IntegerField(db_column=u'requireSubscriptionForEmailPosting')
+#     thumbnail_size = models.IntegerField(db_column=u'thumbnailSize')
+#     max_image_size = models.IntegerField(db_column=u'maxImageSize')
+#     enable_post_meta_data = models.IntegerField(db_column=u'enablePostMetaData')
+#     use_captcha = models.IntegerField(db_column=u'useCaptcha')
+#     group_to_edit_post = models.CharField(max_length=7L, db_column=u'groupToEditPost', blank=True)
+#     archive_enabled = models.IntegerField(null=True, db_column=u'archiveEnabled', blank=True)
+#     post_received_template_id = models.CharField(max_length=7L, db_column=u'postReceivedTemplateId', blank=True)
+#     reply_rich_editor = models.CharField(max_length=7L, db_column=u'replyRichEditor', blank=True)
+#     reply_filter_code = models.CharField(max_length=10L, db_column=u'replyFilterCode', blank=True)
+#
+#     class Meta:
+#         db_table = u'Collaboration'
+#
+#
+#class Dashboard(models.Model):
+#    asset_id = models.CharField(max_length=7L, db_column=u'assetId')
+#    revision_date = models.BigIntegerField(db_column=u'revisionDate')
+#    admins_group = models.ForeignKey('Group', db_column='groupId')
+#    users_group = models.ForeignKey('Group', db_column='groupId')
+#    template_id = models.CharField(max_length=7L, db_column=u'templateId', blank=True)
+#    is_initialized = models.IntegerField(db_column=u'isInitialized')
+#    assets_to_hide = models.TextField(db_column=u'assetsToHide', blank=True)
+#
+#    class Meta:
+#        db_table = u'Dashboard'
+#
 
 class DataForm(models.Model):
     acknowledgement = models.TextField(blank=True)
@@ -213,7 +214,7 @@ class EMSBadge(models.Model):
 
 
 class EMSBadgeGroup(models.Model):
-    badge_group_id = models.CharField(max_length=7L, primary_key=True, db_column=u'badgeGroupId')
+    badge_group = models.ForeignKey('Group', db_column='groupId')
     ems_asset_id = models.CharField(max_length=7L, db_column=u'emsAssetId')
     name = models.CharField(max_length=33L, blank=True)
 
@@ -368,7 +369,7 @@ class EventManagementSystem(models.Model):
     ribbon_instructions = models.TextField(db_column=u'ribbonInstructions', blank=True)
     ticket_instructions = models.TextField(db_column=u'ticketInstructions', blank=True)
     token_instructions = models.TextField(db_column=u'tokenInstructions', blank=True)
-    registration_staff_group_id = models.CharField(max_length=7L, db_column=u'registrationStaffGroupId')
+    registration_staff_group = models.ForeignKey('Group', db_column='groupId')
     schedule_template_id = models.CharField(max_length=7L, db_column=u'scheduleTemplateId', blank=True)
     schedule_columns_per_page = models.IntegerField(null=True, db_column=u'scheduleColumnsPerPage', blank=True)
 
@@ -557,51 +558,51 @@ class ImageAsset(models.Model):
         db_table = u'ImageAsset'
 
 
-class InOutBoard(models.Model):
-    asset_id = models.CharField(max_length=7L, db_column=u'assetId')
-    revision_date = models.BigIntegerField(db_column=u'revisionDate')
-    status_list = models.TextField(db_column=u'statusList', blank=True)
-    report_viewer_group = models.CharField(max_length=7L, db_column=u'reportViewerGroup', blank=True)
-    in_out_group = models.CharField(max_length=7L, db_column=u'inOutGroup', blank=True)
-    in_out_template_id = models.CharField(max_length=7L, db_column=u'inOutTemplateId', blank=True)
-    report_template_id = models.CharField(max_length=7L, db_column=u'reportTemplateId', blank=True)
-    paginate_after = models.IntegerField(db_column=u'paginateAfter')
-    report_paginate_after = models.IntegerField(db_column=u'reportPaginateAfter')
-
-    class Meta:
-        db_table = u'InOutBoard'
-
-
-class InOutBoardDelegates(models.Model):
-    user = models.ForeignKey('User', db_column='userId')
-    delegate_user = models.ForeignKey('User', db_column='userId')
-    asset_id = models.CharField(max_length=7L, db_column=u'assetId', blank=True)
-
-    class Meta:
-        db_table = u'InOutBoard_delegates'
-
-
-class InOutBoardStatus(models.Model):
-    asset_id = models.CharField(max_length=7L, db_column=u'assetId', blank=True)
-    user = models.ForeignKey('User', db_column='userId')
-    status = models.CharField(max_length=85L, blank=True)
-    date_stamp = models.IntegerField(db_column=u'dateStamp')
-    message = models.TextField(blank=True)
-
-    class Meta:
-        db_table = u'InOutBoard_status'
-
-
-class InOutBoardStatusLog(models.Model):
-    asset_id = models.CharField(max_length=7L, db_column=u'assetId', blank=True)
-    user = models.ForeignKey('User', db_column='userId')
-    status = models.CharField(max_length=85L, blank=True)
-    date_stamp = models.IntegerField(db_column=u'dateStamp')
-    message = models.TextField(blank=True)
-    created_by = models.CharField(max_length=7L, db_column=u'createdBy', blank=True)
-
-    class Meta:
-        db_table = u'InOutBoard_statusLog'
+# class InOutBoard(models.Model):
+#     asset_id = models.CharField(max_length=7L, db_column=u'assetId')
+#     revision_date = models.BigIntegerField(db_column=u'revisionDate')
+#     status_list = models.TextField(db_column=u'statusList', blank=True)
+#     report_viewer_group = models.CharField(max_length=7L, db_column=u'reportViewerGroup', blank=True)
+#     in_out_group = models.CharField(max_length=7L, db_column=u'inOutGroup', blank=True)
+#     in_out_template_id = models.CharField(max_length=7L, db_column=u'inOutTemplateId', blank=True)
+#     report_template_id = models.CharField(max_length=7L, db_column=u'reportTemplateId', blank=True)
+#     paginate_after = models.IntegerField(db_column=u'paginateAfter')
+#     report_paginate_after = models.IntegerField(db_column=u'reportPaginateAfter')
+#
+#     class Meta:
+#         db_table = u'InOutBoard'
+#
+#
+# class InOutBoardDelegate(models.Model):
+#     user = models.ForeignKey('User', db_column='userId')
+#     delegate_user = models.ForeignKey('User', db_column='userId')
+#     asset_id = models.CharField(max_length=7L, db_column=u'assetId', blank=True)
+#
+#     class Meta:
+#         db_table = u'InOutBoard_delegates'
+#
+#
+# class InOutBoardStatu(models.Model):
+#     asset_id = models.CharField(max_length=7L, db_column=u'assetId', blank=True)
+#     user = models.ForeignKey('User', db_column='userId')
+#     status = models.CharField(max_length=85L, blank=True)
+#     date_stamp = models.IntegerField(db_column=u'dateStamp')
+#     message = models.TextField(blank=True)
+#
+#     class Meta:
+#         db_table = u'InOutBoard_status'
+#
+#
+# class InOutBoardStatusLog(models.Model):
+#     asset_id = models.CharField(max_length=7L, db_column=u'assetId', blank=True)
+#     user = models.ForeignKey('User', db_column='userId')
+#     status = models.CharField(max_length=85L, blank=True)
+#     date_stamp = models.IntegerField(db_column=u'dateStamp')
+#     message = models.TextField(blank=True)
+#     created_by = models.CharField(max_length=7L, db_column=u'createdBy', blank=True)
+#
+#     class Meta:
+#         db_table = u'InOutBoard_statusLog'
 
 
 class KBAuth(models.Model):
@@ -677,13 +678,13 @@ class MailmanManager(models.Model):
 
 class MailmanManagerGroupsInList(models.Model):
     list_id = models.CharField(max_length=7L, db_column=u'listId')
-    group_id = models.CharField(max_length=7L, db_column=u'groupId')
+    group = models.ForeignKey('Group', db_column='groupId')
 
     class Meta:
         db_table = u'MailmanManager_groupsInList'
 
 
-class MailmanManagerLists(models.Model):
+class MailmanManagerList(models.Model):
     list_id = models.CharField(max_length=7L, primary_key=True, db_column=u'listId')
     is_alias = models.IntegerField(null=True, db_column=u'isAlias', blank=True)
     list_name = models.CharField(max_length=85L, db_column=u'listName', blank=True)
@@ -920,7 +921,7 @@ class NewsletterCollection(models.Model):
         db_table = u'NewsletterCollection'
 
 
-class NewsletterSubscriptions(models.Model):
+class NewsletterSubscription(models.Model):
     asset_id = models.CharField(max_length=7L, db_column=u'assetId')
     user = models.ForeignKey('User', db_column='userId')
     subscriptions = models.TextField(blank=True)
@@ -1226,7 +1227,7 @@ class Shortcut(models.Model):
         db_table = u'Shortcut'
 
 
-class ShortcutOverrides(models.Model):
+class ShortcutOverride(models.Model):
     asset_id = models.CharField(max_length=7L, db_column=u'assetId')
     field_name = models.CharField(max_length=85L, db_column=u'fieldName')
     new_value = models.TextField(db_column=u'newValue', blank=True)
@@ -1385,7 +1386,7 @@ class SurveyOld(models.Model):
     group_to_view_reports = models.CharField(max_length=7L, db_column=u'groupToViewReports', blank=True)
     mode = models.CharField(max_length=10L, blank=True)
     survey_id = models.CharField(max_length=7L, db_column=u'Survey_id', blank=True)
-    anonymous = models.CharField(max_length=0L)
+    anonymous = models.CharField(max_length=1L)
     questions_per_page = models.IntegerField(db_column=u'questionsPerPage')
     response_template_id = models.CharField(max_length=7L, db_column=u'responseTemplateId', blank=True)
     overview_template_id = models.CharField(max_length=7L, db_column=u'overviewTemplateId', blank=True)
@@ -1414,7 +1415,7 @@ class SurveyQuestionResponseOld(models.Model):
         db_table = u'Survey_questionResponse_old'
 
 
-class SurveyQuestionTypes(models.Model):
+class SurveyQuestionType(models.Model):
     question_type = models.CharField(max_length=18L, primary_key=True, db_column=u'questionType')
     answers = models.TextField()
 
@@ -1547,7 +1548,7 @@ class TTProjectResourceList(models.Model):
         db_table = u'TT_projectResourceList'
 
 
-class TTProjectTasks(models.Model):
+class TTProjectTask(models.Model):
     task_id = models.CharField(max_length=7L, primary_key=True, db_column=u'taskId')
     project_id = models.CharField(max_length=7L, db_column=u'projectId', blank=True)
     task_name = models.CharField(max_length=85L, db_column=u'taskName', blank=True)
@@ -1641,7 +1642,7 @@ class ThingyRecordRecord(models.Model):
         db_table = u'ThingyRecord_record'
 
 
-class ThingyFields(models.Model):
+class ThingyField(models.Model):
     asset_id = models.CharField(max_length=7L, db_column=u'assetId')
     thing_id = models.CharField(max_length=7L, db_column=u'thingId')
     field_id = models.CharField(max_length=7L, db_column=u'fieldId')
@@ -1690,7 +1691,7 @@ class ThingyIkgQcHs3rCevOFoHUiU8kg(models.Model):
         db_table = u'Thingy_ikgQcHs3rCevOFoHUiU8kg'
 
 
-class ThingyThings(models.Model):
+class ThingyThing(models.Model):
     asset_id = models.CharField(max_length=7L, db_column=u'assetId')
     thing_id = models.CharField(max_length=7L, primary_key=True, db_column=u'thingId')
     label = models.CharField(max_length=85L)
@@ -1730,7 +1731,7 @@ class Thread(models.Model):
     last_post_date = models.BigIntegerField(null=True, db_column=u'lastPostDate', blank=True)
     is_locked = models.IntegerField(db_column=u'isLocked')
     is_sticky = models.IntegerField(db_column=u'isSticky')
-    subscription_group_id = models.CharField(max_length=7L, db_column=u'subscriptionGroupId', blank=True)
+    subscription_group = models.ForeignKey('Group', db_column='groupId')
     revision_date = models.BigIntegerField(db_column=u'revisionDate')
     karma = models.IntegerField()
     karma_scale = models.IntegerField(db_column=u'karmaScale')
@@ -1749,23 +1750,23 @@ class ThreadRead(models.Model):
         db_table = u'Thread_read'
 
 
-class UserList(models.Model):
-    asset_id = models.CharField(max_length=7L, db_column=u'assetId')
-    revision_date = models.BigIntegerField(db_column=u'revisionDate')
-    template_id = models.CharField(max_length=7L, db_column=u'templateId', blank=True)
-    show_group_id = models.CharField(max_length=7L, db_column=u'showGroupId', blank=True)
-    hide_group_id = models.CharField(max_length=7L, db_column=u'hideGroupId', blank=True)
-    users_per_page = models.IntegerField(null=True, db_column=u'usersPerPage', blank=True)
-    alphabet = models.TextField(blank=True)
-    alphabet_search_field = models.CharField(max_length=42L, db_column=u'alphabetSearchField', blank=True)
-    show_only_visible_as_named = models.IntegerField(null=True, db_column=u'showOnlyVisibleAsNamed', blank=True)
-    sort_by = models.CharField(max_length=42L, db_column=u'sortBy', blank=True)
-    sort_order = models.CharField(max_length=1L, db_column=u'sortOrder', blank=True)
-    override_public_email = models.IntegerField(null=True, db_column=u'overridePublicEmail', blank=True)
-    override_public_profile = models.IntegerField(null=True, db_column=u'overridePublicProfile', blank=True)
-
-    class Meta:
-        db_table = u'UserList'
+#class UserList(models.Model):
+#    asset_id = models.CharField(max_length=7L, db_column=u'assetId')
+#    revision_date = models.BigIntegerField(db_column=u'revisionDate')
+#    template_id = models.CharField(max_length=7L, db_column=u'templateId', blank=True)
+#    show_group = models.ForeignKey('Group', db_column='groupId')
+#    hide_group = models.ForeignKey('Group', db_column='groupId')
+#    users_per_page = models.IntegerField(null=True, db_column=u'usersPerPage', blank=True)
+#    alphabet = models.TextField(blank=True)
+#    alphabet_search_field = models.CharField(max_length=42L, db_column=u'alphabetSearchField', blank=True)
+#    show_only_visible_as_named = models.IntegerField(null=True, db_column=u'showOnlyVisibleAsNamed', blank=True)
+#    sort_by = models.CharField(max_length=42L, db_column=u'sortBy', blank=True)
+#    sort_order = models.CharField(max_length=1L, db_column=u'sortOrder', blank=True)
+#    override_public_email = models.IntegerField(null=True, db_column=u'overridePublicEmail', blank=True)
+#    override_public_profile = models.IntegerField(null=True, db_column=u'overridePublicProfile', blank=True)
+#
+#    class Meta:
+#        db_table = u'UserList'
 
 
 class WeatherData(models.Model):
@@ -2033,7 +2034,7 @@ class Asset(models.Model):
         db_table = u'asset'
 
 
-class AssetAspectComments(models.Model):
+class AssetAspectComment(models.Model):
     asset_id = models.CharField(max_length=7L, db_column=u'assetId')
     revision_date = models.BigIntegerField(db_column=u'revisionDate')
     comments = models.TextField(blank=True)
@@ -2071,7 +2072,7 @@ class AssetAspectRssFeed(models.Model):
 class AssetAspectSubscriber(models.Model):
     asset_id = models.CharField(max_length=7L, db_column=u'assetId')
     revision_date = models.BigIntegerField(db_column=u'revisionDate')
-    subscription_group_id = models.CharField(max_length=7L, db_column=u'subscriptionGroupId', blank=True)
+    subscription_group = models.ForeignKey('Group', db_column='groupId')
     subscription_enabled = models.IntegerField(db_column=u'subscriptionEnabled')
     always_confirm_subscription = models.IntegerField(db_column=u'alwaysConfirmSubscription')
     allow_anonymous_subscription = models.IntegerField(db_column=u'allowAnonymousSubscription')
@@ -2211,10 +2212,6 @@ class Base64Field(models.TextField):
         setattr(obj, self.field_name, base64.encodestring(data).rstrip('=='))
 
 
-class AuthenticationQueryset(models.db.QuerySet):
-    pass
-
-
 class AuthenticationManager(models.Manager):
     def get_queryset(self):
         # Filter to only get the passwords, might want to expand this later but
@@ -2229,7 +2226,7 @@ class Authentication(models.Model):
     user = models.ForeignKey('User', db_column='userId')
     auth_method = models.CharField(max_length=10L, db_column=u'authMethod')
     field_name = models.CharField(max_length=42L, db_column=u'fieldName')
-    password = models.Base64Field(db_column=u'fieldData', blank=True)
+    password = Base64Field(db_column=u'fieldData', blank=True)
 
     objects = AuthenticationManager()
 
@@ -2336,7 +2333,7 @@ class FilePumpBundle(models.Model):
         db_table = u'filePumpBundle'
 
 
-class FriendInvitations(models.Model):
+class FriendInvitation(models.Model):
     invite_id = models.CharField(max_length=7L, primary_key=True, db_column=u'inviteId')
     inviter_id = models.CharField(max_length=7L, db_column=u'inviterId', blank=True)
     friend_id = models.CharField(max_length=7L, db_column=u'friendId', blank=True)
@@ -2348,16 +2345,16 @@ class FriendInvitations(models.Model):
         db_table = u'friendInvitations'
 
 
-class GroupGroupings(models.Model):
-    group_id = models.CharField(max_length=7L, db_column=u'groupId', blank=True)
+class GroupGrouping(models.Model):
+    group = models.ForeignKey('Group', db_column='groupId')
     in_group = models.CharField(max_length=7L, db_column=u'inGroup', blank=True)
 
     class Meta:
         db_table = u'groupGroupings'
 
 
-class Groupings(models.Model):
-    group_id = models.CharField(max_length=7L, db_column=u'groupId')
+class Grouping(models.Model):
+    group = models.ForeignKey('Group', db_column='groupId')
     user = models.ForeignKey('User', db_column='userId')
     expire_date = models.BigIntegerField(db_column=u'expireDate')
     group_admin = models.IntegerField(db_column=u'groupAdmin')
@@ -2366,9 +2363,16 @@ class Groupings(models.Model):
         db_table = u'groupings'
 
 
-class Groups(models.Model):
-    group_id = models.CharField(max_length=7L, primary_key=True, db_column=u'groupId')
-    group_name = models.CharField(max_length=33L, db_column=u'groupName', blank=True)
+class GroupManager(models.Manager):
+    def koks(self):
+        return self.get(id__exact=self.model.KOK)
+
+
+class Group(models.Model):
+    KOK = 'hwnfHSP2XAIhDKPB3psbGA'
+
+    id = models.CharField(max_length=7L, primary_key=True, db_column=u'groupId')
+    name = models.CharField(max_length=33L, db_column=u'groupName', blank=True)
     description = models.CharField(max_length=85L, blank=True)
     expire_offset = models.IntegerField(db_column=u'expireOffset')
     karma_threshold = models.IntegerField(db_column=u'karmaThreshold')
@@ -2393,6 +2397,20 @@ class Groups(models.Model):
     ldap_link_id = models.CharField(max_length=7L, db_column=u'ldapLinkId', blank=True)
     ldap_recursive_filter = models.TextField(db_column=u'ldapRecursiveFilter', blank=True)
     is_ad_hoc_mail_group = models.IntegerField(db_column=u'isAdHocMailGroup')
+    users = models.ManyToManyField('User', through='Grouping')
+
+    objects = GroupManager()
+
+    def is_kok(self):
+        return self.id == self.KOK
+
+    @property
+    def __repr__(self):
+        return (u'<%s[%s]: %s>' % (
+            self.__class__.__name__,
+            self.pk,
+            self.name,
+        )).encode('utf-8', 'replace')
 
     class Meta:
         db_table = u'groups'
@@ -2402,9 +2420,9 @@ class ImageColor(models.Model):
     color_id = models.CharField(max_length=7L, primary_key=True, db_column=u'colorId')
     name = models.CharField(max_length=85L, blank=True)
     fill_triplet = models.CharField(max_length=2L, db_column=u'fillTriplet')
-    fill_alpha = models.CharField(max_length=0L, db_column=u'fillAlpha')
+    fill_alpha = models.CharField(max_length=1L, db_column=u'fillAlpha')
     stroke_triplet = models.CharField(max_length=2L, db_column=u'strokeTriplet')
-    stroke_alpha = models.CharField(max_length=0L, db_column=u'strokeAlpha')
+    stroke_alpha = models.CharField(max_length=1L, db_column=u'strokeAlpha')
 
     class Meta:
         db_table = u'imageColor'
@@ -2428,7 +2446,7 @@ class ImagePalette(models.Model):
         db_table = u'imagePalette'
 
 
-class ImagePaletteColors(models.Model):
+class ImagePaletteColor(models.Model):
     palette_id = models.CharField(max_length=7L, db_column=u'paletteId')
     color_id = models.CharField(max_length=7L, db_column=u'colorId', blank=True)
     palette_order = models.IntegerField(db_column=u'paletteOrder')
@@ -2444,7 +2462,7 @@ class Inbox(models.Model):
     completed_on = models.BigIntegerField(null=True, db_column=u'completedOn', blank=True)
     completed_by = models.CharField(max_length=7L, db_column=u'completedBy', blank=True)
     user = models.ForeignKey('User', db_column='userId')
-    group_id = models.CharField(max_length=7L, db_column=u'groupId', blank=True)
+    group = models.ForeignKey('Group', db_column='groupId')
     subject = models.CharField(max_length=85L, blank=True)
     message = models.TextField(blank=True)
     sent_by = models.CharField(max_length=7L, db_column=u'sentBy', blank=True)
@@ -2501,7 +2519,7 @@ class LdapLink(models.Model):
     ldap_identity = models.CharField(max_length=85L, db_column=u'ldapIdentity', blank=True)
     ldap_identity_name = models.CharField(max_length=85L, db_column=u'ldapIdentityName', blank=True)
     ldap_password_name = models.CharField(max_length=85L, db_column=u'ldapPasswordName', blank=True)
-    ldap_send_welcome_message = models.CharField(max_length=0L, db_column=u'ldapSendWelcomeMessage', blank=True)
+    ldap_send_welcome_message = models.CharField(max_length=1L, db_column=u'ldapSendWelcomeMessage', blank=True)
     ldap_welcome_message = models.TextField(db_column=u'ldapWelcomeMessage', blank=True)
     ldap_account_template = models.CharField(max_length=7L, db_column=u'ldapAccountTemplate', blank=True)
     ldap_create_account_template = models.CharField(max_length=7L, db_column=u'ldapCreateAccountTemplate', blank=True)
@@ -2744,51 +2762,51 @@ class TemplateAttachments(models.Model):
         db_table = u'template_attachments'
 
 
-class Transaction(models.Model):
-    transaction_id = models.CharField(max_length=7L, primary_key=True, db_column=u'transactionId')
-    originating_transaction_id = models.CharField(max_length=7L, db_column=u'originatingTransactionId', blank=True)
-    is_successful = models.IntegerField(db_column=u'isSuccessful')
-    order_number = models.IntegerField(unique=True, db_column=u'orderNumber')
-    transaction_code = models.CharField(max_length=33L, db_column=u'transactionCode', blank=True)
-    status_code = models.CharField(max_length=11L, db_column=u'statusCode', blank=True)
-    status_message = models.CharField(max_length=85L, db_column=u'statusMessage', blank=True)
-    user = models.ForeignKey('User', db_column='userId')
-    username = models.CharField(max_length=11L)
-    amount = models.FloatField(null=True, blank=True)
-    shop_credit_deduction = models.FloatField(null=True, db_column=u'shopCreditDeduction', blank=True)
-    shipping_address_id = models.CharField(max_length=7L, db_column=u'shippingAddressId', blank=True)
-    shipping_address_name = models.CharField(max_length=11L, db_column=u'shippingAddressName', blank=True)
-    shipping_address1 = models.CharField(max_length=11L, db_column=u'shippingAddress1', blank=True)
-    shipping_address2 = models.CharField(max_length=11L, db_column=u'shippingAddress2', blank=True)
-    shipping_address3 = models.CharField(max_length=11L, db_column=u'shippingAddress3', blank=True)
-    shipping_city = models.CharField(max_length=11L, db_column=u'shippingCity', blank=True)
-    shipping_state = models.CharField(max_length=11L, db_column=u'shippingState', blank=True)
-    shipping_country = models.CharField(max_length=11L, db_column=u'shippingCountry', blank=True)
-    shipping_code = models.CharField(max_length=11L, db_column=u'shippingCode', blank=True)
-    shipping_phone_number = models.CharField(max_length=11L, db_column=u'shippingPhoneNumber', blank=True)
-    shipping_driver_id = models.CharField(max_length=7L, db_column=u'shippingDriverId', blank=True)
-    shipping_driver_label = models.CharField(max_length=11L, db_column=u'shippingDriverLabel', blank=True)
-    shipping_price = models.FloatField(null=True, db_column=u'shippingPrice', blank=True)
-    payment_address_id = models.CharField(max_length=7L, db_column=u'paymentAddressId', blank=True)
-    payment_address_name = models.CharField(max_length=11L, db_column=u'paymentAddressName', blank=True)
-    payment_address1 = models.CharField(max_length=11L, db_column=u'paymentAddress1', blank=True)
-    payment_address2 = models.CharField(max_length=11L, db_column=u'paymentAddress2', blank=True)
-    payment_address3 = models.CharField(max_length=11L, db_column=u'paymentAddress3', blank=True)
-    payment_city = models.CharField(max_length=11L, db_column=u'paymentCity', blank=True)
-    payment_state = models.CharField(max_length=11L, db_column=u'paymentState', blank=True)
-    payment_country = models.CharField(max_length=11L, db_column=u'paymentCountry', blank=True)
-    payment_code = models.CharField(max_length=11L, db_column=u'paymentCode', blank=True)
-    payment_phone_number = models.CharField(max_length=11L, db_column=u'paymentPhoneNumber', blank=True)
-    payment_driver_id = models.CharField(max_length=7L, db_column=u'paymentDriverId', blank=True)
-    payment_driver_label = models.CharField(max_length=11L, db_column=u'paymentDriverLabel', blank=True)
-    taxes = models.FloatField(null=True, blank=True)
-    date_of_purchase = models.DateTimeField(null=True, db_column=u'dateOfPurchase', blank=True)
-    is_recurring = models.IntegerField(null=True, db_column=u'isRecurring', blank=True)
-    notes = models.TextField(blank=True)
-    cashier_user = models.ForeignKey('User', db_column='userId')
-
-    class Meta:
-        db_table = u'transaction'
+#class Transaction(models.Model):
+#    transaction_id = models.CharField(max_length=7L, primary_key=True, db_column=u'transactionId')
+#    originating_transaction_id = models.CharField(max_length=7L, db_column=u'originatingTransactionId', blank=True)
+#    is_successful = models.IntegerField(db_column=u'isSuccessful')
+#    order_number = models.IntegerField(unique=True, db_column=u'orderNumber')
+#    transaction_code = models.CharField(max_length=33L, db_column=u'transactionCode', blank=True)
+#    status_code = models.CharField(max_length=11L, db_column=u'statusCode', blank=True)
+#    status_message = models.CharField(max_length=85L, db_column=u'statusMessage', blank=True)
+#    user = models.ForeignKey('User', db_column='userId')
+#    username = models.CharField(max_length=11L)
+#    amount = models.FloatField(null=True, blank=True)
+#    shop_credit_deduction = models.FloatField(null=True, db_column=u'shopCreditDeduction', blank=True)
+#    shipping_address_id = models.CharField(max_length=7L, db_column=u'shippingAddressId', blank=True)
+#    shipping_address_name = models.CharField(max_length=11L, db_column=u'shippingAddressName', blank=True)
+#    shipping_address1 = models.CharField(max_length=11L, db_column=u'shippingAddress1', blank=True)
+#    shipping_address2 = models.CharField(max_length=11L, db_column=u'shippingAddress2', blank=True)
+#    shipping_address3 = models.CharField(max_length=11L, db_column=u'shippingAddress3', blank=True)
+#    shipping_city = models.CharField(max_length=11L, db_column=u'shippingCity', blank=True)
+#    shipping_state = models.CharField(max_length=11L, db_column=u'shippingState', blank=True)
+#    shipping_country = models.CharField(max_length=11L, db_column=u'shippingCountry', blank=True)
+#    shipping_code = models.CharField(max_length=11L, db_column=u'shippingCode', blank=True)
+#    shipping_phone_number = models.CharField(max_length=11L, db_column=u'shippingPhoneNumber', blank=True)
+#    shipping_driver_id = models.CharField(max_length=7L, db_column=u'shippingDriverId', blank=True)
+#    shipping_driver_label = models.CharField(max_length=11L, db_column=u'shippingDriverLabel', blank=True)
+#    shipping_price = models.FloatField(null=True, db_column=u'shippingPrice', blank=True)
+#    payment_address_id = models.CharField(max_length=7L, db_column=u'paymentAddressId', blank=True)
+#    payment_address_name = models.CharField(max_length=11L, db_column=u'paymentAddressName', blank=True)
+#    payment_address1 = models.CharField(max_length=11L, db_column=u'paymentAddress1', blank=True)
+#    payment_address2 = models.CharField(max_length=11L, db_column=u'paymentAddress2', blank=True)
+#    payment_address3 = models.CharField(max_length=11L, db_column=u'paymentAddress3', blank=True)
+#    payment_city = models.CharField(max_length=11L, db_column=u'paymentCity', blank=True)
+#    payment_state = models.CharField(max_length=11L, db_column=u'paymentState', blank=True)
+#    payment_country = models.CharField(max_length=11L, db_column=u'paymentCountry', blank=True)
+#    payment_code = models.CharField(max_length=11L, db_column=u'paymentCode', blank=True)
+#    payment_phone_number = models.CharField(max_length=11L, db_column=u'paymentPhoneNumber', blank=True)
+#    payment_driver_id = models.CharField(max_length=7L, db_column=u'paymentDriverId', blank=True)
+#    payment_driver_label = models.CharField(max_length=11L, db_column=u'paymentDriverLabel', blank=True)
+#    taxes = models.FloatField(null=True, blank=True)
+#    date_of_purchase = models.DateTimeField(null=True, db_column=u'dateOfPurchase', blank=True)
+#    is_recurring = models.IntegerField(null=True, db_column=u'isRecurring', blank=True)
+#    notes = models.TextField(blank=True)
+#    cashier_user = models.ForeignKey('User', db_column='userId')
+#
+#    class Meta:
+#        db_table = u'transaction'
 
 
 class TransactionItem(models.Model):
@@ -2822,16 +2840,16 @@ class TransactionItem(models.Model):
         db_table = u'transactionItem'
 
 
-class UserInvitations(models.Model):
-    invite_id = models.CharField(max_length=7L, primary_key=True, db_column=u'inviteId')
-    user = models.ForeignKey('User', db_column='userId')
-    date_sent = models.DateField(null=True, db_column=u'dateSent', blank=True)
-    email = models.CharField(max_length=85L, blank=True)
-    new_user = models.ForeignKey('User', db_column='userId')
-    date_created = models.DateField(null=True, db_column=u'dateCreated', blank=True)
-
-    class Meta:
-        db_table = u'userInvitations'
+#class UserInvitations(models.Model):
+#    invite_id = models.CharField(max_length=7L, primary_key=True, db_column=u'inviteId')
+#    user = models.ForeignKey('User', db_column='userId')
+#    date_sent = models.DateField(null=True, db_column=u'dateSent', blank=True)
+#    email = models.CharField(max_length=85L, blank=True)
+#    new_user = models.ForeignKey('User', db_column='userId')
+#    date_created = models.DateField(null=True, db_column=u'dateCreated', blank=True)
+#
+#    class Meta:
+#        db_table = u'userInvitations'
 
 
 class UserLoginLog(models.Model):
@@ -2861,7 +2879,7 @@ class UserProfileCategory(models.Model):
 
 
 class UserProfileData(models.Model):
-    user = models.ForeignKey('User', db_column='userId')
+    user = models.OneToOneField('User', primary_key=True, db_column='userId')
     email = models.CharField(max_length=85L, blank=True)
     first_name = models.CharField(max_length=85L, db_column=u'firstName', blank=True)
     middle_name = models.CharField(max_length=85L, db_column=u'middleName', blank=True)
@@ -2987,6 +3005,30 @@ class User(models.Model):
     status = models.CharField(max_length=11L, blank=True)
     referring_affiliate = models.CharField(max_length=7L, db_column=u'referringAffiliate', blank=True)
     friends_group = models.CharField(max_length=7L, db_column=u'friendsGroup', blank=True)
+
+    def get_django_user(self):
+        try:
+            user = auth_models.User.objects.get(username=self.username)
+        except auth_models.User.DoesNotExist:
+            profile = self.userprofiledata
+            user = auth_models.User.objects.create(
+                username=self.username,
+                first_name=profile.first_name,
+                last_name=profile.last_name,
+                email=profile.email,
+            )
+
+        return user
+
+    def __repr__(self):
+        return (u'<%s[%s]: %s>' % (
+            self.__class__.__name__,
+            self.pk,
+            self.username,
+        )).encode('utf-8', 'replace')
+
+    def __unicode__(self):
+        return self.username
 
     class Meta:
         db_table = u'users'

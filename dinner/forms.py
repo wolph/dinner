@@ -180,17 +180,21 @@ class ReservationRemoveForm(wtforms.Form):
             if k.startswith('reservation_'):
                 ids |= set(vs)
 
-        for id_ in ids.copy():
-            reservation = self.user_reservations.get(id_)
-            if reservation:
-                ids.remove(id_)
-                reservation.delete()
-                yield reservation
+        if not self.user.has_perm('dinner.delete_reservation'):
+            for id_ in ids.copy():
+                reservation = self.user_reservations.get(id_)
+                if not reservation:
+                    ids.remove(id_)
 
-        if self.user.has_perm('dinner.delete_reservation'):
-            for reservation in models.Reservation.objects.filter(pk__in=ids):
-                reservation.delete()
-                yield reservation
+        reservations_list = []
+        if ids:
+            reservations_query = models.Reservation.objects.filter(pk__in=ids)
+            # Materialize list to return later, otherwise it'd be empty because
+            # of the delete
+            reservations_list += list(reservations_query)
+            reservations_query.delete()
+
+        return reservations_list
 
 
 def get_reservation_remove_form(user, user_reservations, reservations,

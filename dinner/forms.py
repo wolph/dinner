@@ -150,9 +150,9 @@ class ReservationCreateForm(wtforms.Form):
         for dinner in self.dinners:
             # We won't add dinner reservations after 14:00 in the afternoon
             if(
-                    dinner.is_expired
-                    and not self.user.has_perm('dinner.add_reservation')
-                ):
+                dinner.is_expired
+                and not self.user.has_perm('dinner.add_reservation')
+            ):
                 continue
 
             values = self.data[dinner.field.name]

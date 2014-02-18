@@ -1,9 +1,21 @@
 import models
+from koornbeurs import models as koornbeurs_models
 from django.contrib import admin
 from django.conf import settings
 from django.utils import functional
 from tags_input import admin as tags_input_admin
 import reversion
+
+
+class AdminSite(admin.AdminSite):
+    def has_permission(self, request):
+        print 'has permission', request
+        return bool(koornbeurs_models.Group.objects.koks().filter(
+            users__username='Magnix',
+            #users__username=request.user.username,
+        ).count())
+
+site = AdminSite('dinner_admin', app_name='dinner_admin')
 
 
 class CourseAdmin(reversion.VersionAdmin):
@@ -65,8 +77,12 @@ class ReservationAdmin(reversion.VersionAdmin):
 
 
 def _register(model, admin_class):
+    if model not in site._registry:
+        site.register(model, admin_class)
+
     if model not in admin.site._registry:
         admin.site.register(model, admin_class)
+
 
 _register(models.Course, CourseAdmin)
 _register(models.Dinner, DinnerAdmin)

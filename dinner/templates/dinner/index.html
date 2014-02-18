@@ -238,7 +238,7 @@ jQuery(function($){
     /* Restore the state from localStorage if available */
     var state = localStorage.getItem(STATE_KEY)
     if(state)
-        form.unserializeForm(state, {'override-values': false});
+        form.unserializeForm(state, {'override-values': true});
 
     /* Save the form state (name, email, etc...) to localStorage */
     function saveState(){

@@ -34,6 +34,15 @@ def index(request, date, begin_date, end_date):
     done = False
     data = request.POST or None
 
+    class Obj(object):
+        pass
+    obj = Obj()
+
+    if request.user.is_authenticated():
+        obj.email = request.user.email
+        obj.name = '%s %s' % (
+            request.user.first_name, request.user.last_name)
+
     if isinstance(request.session.get('reservations'), dict):
         user_reservations = request.session['reservations']
     else:
@@ -41,6 +50,7 @@ def index(request, date, begin_date, end_date):
 
     # Create new reservations
     create_form = forms.ReservationCreateForm(
+        obj=obj,
         formdata=data,
         user=request.user,
         dinners=models.Dinner.objects.get_days(begin_date, end_date),

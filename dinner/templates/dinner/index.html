@@ -55,7 +55,7 @@ Eetgelegenheid - inschrijven
                     <abbr title="{{ cook.first_name }} {{ cook.last_name }} ({{ cook.username }})">{{ cook.first_name }}</abbr>
                     {%- if not loop.last %},{% endif %}
                     {% else %}
-                    Nog niet bekend.
+                    ...
                     {% endfor %}
                 </td>
                 <td>{{ dinner.field(disabled=(
@@ -69,7 +69,7 @@ Eetgelegenheid - inschrijven
             </tr>
             <tr>
                 <td colspan="2">
-                    {{ dinner.description|default('') }}
+                    {{ dinner.description|default('Nog niet bekend.') }}
                 </td>
             </tr>
             {% endfor %}

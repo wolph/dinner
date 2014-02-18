@@ -162,6 +162,18 @@ DEFAULT_DINNER_COURSES = [
 ]
 DINNER_SIGNUP_UNTIL = datetime.time(20)
 
+def auth_user_queryset(*args, **kwargs):
+    from koornbeurs.models import User
+    return (User.objects
+        .select_related('userprofiledata')
+        .exclude(userprofiledata__first_name='')
+        .exclude(userprofiledata__last_name='')
+        .exclude(username='')
+        .exclude(userprofiledata__first_name__isnull=True)
+        .exclude(userprofiledata__last_name__isnull=True)
+        .exclude(username__isnull=True)
+    )
+
 TAGS_INPUT_MAPPINGS = {
     'dinner.Dinner': {
         'field': 'date',
@@ -171,9 +183,15 @@ TAGS_INPUT_MAPPINGS = {
         'create_missing': True,
     },
     'auth.User': {
-        #'fields': ('first_name', 'last_name', 'username'),
+        # NOTE! Actual queryset defined in koornbeurs.models at the bottom
         'field': 'username',
+        #'fields': ('username', 'userprofiledata__first_name', 'userprofiledata__last_name'),
+        #'separator': ', ',
+        'queryset': auth_user_queryset,
     },
+    # 'auth.User': {
+    #     'fields': ('first_name', 'last_name', 'username'),
+    # },
 }
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False

@@ -3080,3 +3080,4 @@ class Wobject(models.Model):
 
     class Meta:
         db_table = u'wobject'
+

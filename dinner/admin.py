@@ -16,7 +16,7 @@ class AdminSite(admin.AdminSite):
             #users__username=request.user.username,
         ).count())
 
-site = AdminSite('dinner_admin', app_name='dinner_admin')
+site = AdminSite('admin', app_name='admin')
 
 
 class CourseAdmin(reversion.VersionAdmin):
@@ -84,6 +84,16 @@ class DinnerAdmin(reversion.VersionAdmin, tags_input_admin.TagsInputAdmin):
         return super(DinnerAdmin, self).add_view(
             request=request, form_url=form_url, extra_context=extra_context)
 
+    def get_form(self, request, obj=None, **kwargs):
+        cooks = request.POST.get('cooks', '')
+        if cooks:
+            webgui_users = koornbeurs_models.User.objects.filter(
+                username__in=cooks.split(','))
+
+            for webgui_user in webgui_users:
+                webgui_user.get_django_user()
+
+        return super(DinnerAdmin, self).get_form(request, obj=obj, **kwargs)
 
 class ReservationAdmin(reversion.VersionAdmin):
     list_display = (u'id', 'user', 'name', 'email', 'comments', 'paid')
@@ -93,11 +103,11 @@ class ReservationAdmin(reversion.VersionAdmin):
 
 
 def _register(model, admin_class):
-    if model not in site._registry:
-        site.register(model, admin_class)
-
     if model not in admin.site._registry:
         admin.site.register(model, admin_class)
+
+    if model not in site._registry:
+        site.register(model, admin_class)
 
 
 _register(models.Course, CourseAdmin)

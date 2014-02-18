@@ -60,10 +60,10 @@ class Dinner(base_models.ModelBase):
     def get_cooks(self):
         cooks = None
         if self.pk:
-            cooks = list(self.cooks.all().values_list('username', flat=True))
+            cooks = list(self.cooks.values_list('first_name', 'last_name'))
 
         if cooks:
-            return u', '.join(cooks)
+            return u', '.join(' '.join(c) for c in cooks)
         else:
             return _('Onbekend')
     get_cooks.short_description = 'Cooks'

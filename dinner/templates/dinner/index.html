@@ -41,9 +41,20 @@ Eetgelegenheid - inschrijven
 
             {% for dinner in create_form.dinners %}
             <tr>
-                <td rowspan="2" title="{{ dinner.date }}">{{ dinner.date.strftime('%A') }}</td>
+                <td rowspan="2" title="{{ dinner.date }}">
+                    {{ dinner.date.strftime('%A') }}
+                    {% if user.has_perm('dinner.dinner_change') %}
+                    <br>
+                    <a href="{% url admin:dinner_dinner_change dinner.pk %}" class="btn btn-danger btn-xs">
+                        Edit <span class="glyphicon glyphicon-edit"></span>
+                    </a>
+                    {% endif %}
+                </td>
                 <td>
-                    {{ dinner.get_cooks() }}
+                    {% for cook in dinner.cooks.all() %}
+                    <abbr title="{{ cook.first_name }} {{ cook.last_name }} ({{ cook.username }})">{{ cook.first_name }}</abbr>
+                    {%- if not loop.last %},{% endif %}
+                    {% endfor %}
                 </td>
                 <td>{{ dinner.field(disabled=(
                         dinner.is_expired
@@ -56,11 +67,6 @@ Eetgelegenheid - inschrijven
             </tr>
             <tr>
                 <td colspan="2">
-                    {% if user.has_perm('dinner.dinner_change') %}
-                    <a href="{% url dinner_admin:dinner_dinner_change dinner.pk %}" class="btn btn-danger btn-sm">
-                        Edit <span class="glyphicon glyphicon-edit"></span>
-                    </a>
-                    {% endif %}
                     {{ dinner.description|default('') }}
                 </td>
             </tr>

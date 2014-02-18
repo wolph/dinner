@@ -2365,7 +2365,7 @@ class Grouping(models.Model):
 
 class GroupManager(models.Manager):
     def koks(self):
-        return self.get(id__exact=self.model.KOK)
+        return self.filter(id__exact=self.model.KOK)
 
 
 class Group(models.Model):
@@ -2397,20 +2397,24 @@ class Group(models.Model):
     ldap_link_id = models.CharField(max_length=7L, db_column=u'ldapLinkId', blank=True)
     ldap_recursive_filter = models.TextField(db_column=u'ldapRecursiveFilter', blank=True)
     is_ad_hoc_mail_group = models.IntegerField(db_column=u'isAdHocMailGroup')
-    users = models.ManyToManyField('User', through='Grouping')
+    users = models.ManyToManyField('User', through='Grouping', related_name='groups')
 
     objects = GroupManager()
 
+    @property
     def is_kok(self):
         return self.id == self.KOK
 
-    @property
     def __repr__(self):
         return (u'<%s[%s]: %s>' % (
             self.__class__.__name__,
             self.pk,
             self.name,
         )).encode('utf-8', 'replace')
+
+    def __unicode__(self):
+        return self.name
+
 
     class Meta:
         db_table = u'groups'

@@ -18,3 +18,10 @@ class WebguiSessionBackend(object):
     def get_user(self, user_id):
         return auth_models.User.objects.get(pk=user_id)
 
+    def has_perm(self, user, perm, obj=None):
+        if perm.startswith('dinner.'):
+            koks = models.Group.objects.koks().filter(
+                users__username=user.username,
+            )
+            return bool(koks.count())
+

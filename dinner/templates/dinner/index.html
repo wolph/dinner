@@ -54,6 +54,8 @@ Eetgelegenheid - inschrijven
                     {% for cook in dinner.cooks.all() %}
                     <abbr title="{{ cook.first_name }} {{ cook.last_name }} ({{ cook.username }})">{{ cook.first_name }}</abbr>
                     {%- if not loop.last %},{% endif %}
+                    {% else %}
+                    Nog niet bekend.
                     {% endfor %}
                 </td>
                 <td>{{ dinner.field(disabled=(

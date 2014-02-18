@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.utils import functional
 from tags_input import admin as tags_input_admin
+from django import forms
 import reversion
 
 
@@ -51,6 +52,19 @@ class CourseInline(admin.TabularInline):
         return formset
 
 
+class ReservationInline(admin.TabularInline):
+    model = models.Reservation
+    readonly_fields = ('user', 'email',)
+    fields = (
+        'name',
+        'paid',
+        'comments',
+    )
+    formfield_overrides = {
+        models.models.TextField: {'widget': forms.TextInput},
+    }
+
+
 class DinnerAdmin(reversion.VersionAdmin, tags_input_admin.TagsInputAdmin):
     list_display = ('date', 'get_cooks', 'get_courses', 'description', 'price',
                     'cost',)
@@ -58,6 +72,8 @@ class DinnerAdmin(reversion.VersionAdmin, tags_input_admin.TagsInputAdmin):
     raw_id_fields = ('cooks',)
     search_fields = ('description', 'cooks__username', 'courses__name')
     list_editable = ['description', 'price']
+
+    inlines = [ReservationInline]
 
     def add_view(self, request, form_url='', extra_context=None):
         data = request.GET.copy()

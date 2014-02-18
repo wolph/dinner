@@ -41,8 +41,10 @@ Eetgelegenheid - inschrijven
 
             {% for dinner in create_form.dinners %}
             <tr>
-                <td rowspan="2" title="{{ dinner.date }}">{{ dinner.date }}: {{ dinner.date.strftime('%A') }}</td>
-                <td>{{ dinner.get_cooks() }}</td>
+                <td rowspan="2" title="{{ dinner.date }}">{{ dinner.date.strftime('%A') }}</td>
+                <td>
+                    {{ dinner.get_cooks() }}
+                </td>
                 <td>{{ dinner.field(disabled=(
                         dinner.is_expired
                         and not user.has_perm('dinner.add_reservation')
@@ -53,7 +55,14 @@ Eetgelegenheid - inschrijven
                 </td>
             </tr>
             <tr>
-                <td colspan="2">{{ dinner.description|default('') }}</td>
+                <td colspan="2">
+                    {% if user.has_perm('dinner.dinner_change') %}
+                    <a href="{% url dinner_admin:dinner_dinner_change dinner.pk %}" class="btn btn-danger btn-sm">
+                        Edit <span class="glyphicon glyphicon-edit"></span>
+                    </a>
+                    {% endif %}
+                    {{ dinner.description|default('') }}
+                </td>
             </tr>
             {% endfor %}
         </table>

@@ -125,6 +125,9 @@ class ReservationCreateForm(wtforms.Form):
             course_radio.label.text = dinner.date.strftime('%A')
             course_radio.choices = []
             course_radio.dinner = dinner
+            if user.has_perm('dinner.delete_reservation'):
+                while course_radio.validators:
+                    course_radio.validators.pop()
 
             dinner.field = course_radio
 
@@ -146,7 +149,10 @@ class ReservationCreateForm(wtforms.Form):
         reservations = []
         for dinner in self.dinners:
             # We won't add dinner reservations after 14:00 in the afternoon
-            if dinner.is_expired:
+            if(
+                    dinner.is_expired
+                    and not self.user.has_perm('dinner.add_reservation')
+                ):
                 continue
 
             values = self.data[dinner.field.name]
@@ -181,7 +187,7 @@ class ReservationRemoveForm(wtforms.Form):
                 reservation.delete()
                 yield reservation
 
-        if self.user.is_staff:
+        if self.user.has_perm('dinner.delete_reservation'):
             for reservation in models.Reservation.objects.filter(pk__in=ids):
                 reservation.delete()
                 yield reservation
@@ -192,11 +198,17 @@ def get_reservation_remove_form(user, user_reservations, reservations,
     class UserReservationRemoveForm(ReservationRemoveForm):
         pass
 
+    # If you have admin permissions, no need to check for expired meals
+    if user.has_perm('dinner.delete_reservation'):
+        validators = []
+    else:
+        validators = [not_expired]
+
     for i, reservation in enumerate(reservations):
         field = BootstrapRemoveButtonsField(
             choices=[(reservation.pk, reservation.pk)],
             coerce=int,
-            validators=[not_expired],
+            validators=validators,
         )
         setattr(UserReservationRemoveForm, 'reservation_%d' % i, field)
 

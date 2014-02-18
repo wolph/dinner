@@ -11,7 +11,6 @@ Eetgelegenheid - inschrijven
 
 <form id="dinner_signup" method="post" action="{{ request.path }}" role="form">
     {% csrf_token %}
-
     <div class="form-group">
         {{ dinner_macros.render_field(create_form.name) }}
     </div>
@@ -44,7 +43,10 @@ Eetgelegenheid - inschrijven
             <tr>
                 <td rowspan="2" title="{{ dinner.date }}">{{ dinner.date }}: {{ dinner.date.strftime('%A') }}</td>
                 <td>{{ dinner.get_cooks() }}</td>
-                <td>{{ dinner.field(disabled=dinner.is_expired, button={
+                <td>{{ dinner.field(disabled=(
+                        dinner.is_expired
+                        and not user.has_perm('dinner.add_reservation')
+                    ), button={
                     'data-loading-text': 'Signing up...',
                     'data-date': dinner.date,
                 }) }}
@@ -66,7 +68,7 @@ Eetgelegenheid - inschrijven
                 class="{% if date == dinner_date %}active{% endif %}"
                     data-date="{{ dinner_date }}">
                 <a
-                    href="{{ url('dinner:index', date=dinner_date) }}"
+                    href="{% url 'dinner:index' date=dinner_date %}"
                     title="{{ dinner_date }}">
                     {{ dinner_date.strftime('%A') }}
                     <span class="label {% if reservations %}label-danger{% else %}label-default{% endif %}"
@@ -81,7 +83,6 @@ Eetgelegenheid - inschrijven
                 <div data-date="{{ dinner_date }}" class="tab-pane {% if date == dinner_date %}active{% endif %}" id="signup_{{ dinner_date }}">
                     <table class="table">
                         <tr>
-                            <th>{{ _('Datum') }}</th>
                             <th>{{ _('Naam') }}</th>
                             <th>{{ _('Keuze') }}</th>
                             <th>{{ _('Opmerkingen') }}</th>
@@ -90,17 +91,16 @@ Eetgelegenheid - inschrijven
 
                         {% for reservation in reservations %}
                         <tr>
-                            <td title="{{ dinner_date }}">{{ dinner_date.strftime('%A') }}</td>
                             <td>{{ reservation.name }}</td>
                             <td>{{ reservation.course }}</td>
                             <td>{{ reservation.comments }}</td>
                             <td>{{ reservation.field(
                                 disabled=(
-                                    reservation.dinner.is_expired
-                                    or (
-                                        reservation not in user_reservations
-                                        and not request.user.is_staff
+                                    (
+                                        reservation.dinner.is_expired
+                                        or reservation.pk not in user_reservations
                                     )
+                                    and not user.has_perm('dinner.delete_reservation')
                                 ),
                                 button={
                                     'data-skip-validation': 'true',

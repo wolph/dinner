@@ -54,6 +54,8 @@ Eetgelegenheid - inschrijven
                     {% for cook in dinner.cooks.all() %}
                     <abbr title="{{ cook.first_name }} {{ cook.last_name }} ({{ cook.username }})">{{ cook.first_name }}</abbr>
                     {%- if not loop.last %},{% endif %}
+                    {% else %}
+                    ...
                     {% endfor %}
                 </td>
                 <td>{{ dinner.field(disabled=(
@@ -67,7 +69,7 @@ Eetgelegenheid - inschrijven
             </tr>
             <tr>
                 <td colspan="2">
-                    {{ dinner.description|default('') }}
+                    {{ dinner.description|default('Nog niet bekend.') }}
                 </td>
             </tr>
             {% endfor %}
@@ -146,170 +148,10 @@ Eetgelegenheid - inschrijven
 {% block footer_js %}
 {{ super() }}
 
+<script src="{{ STATIC_URL }}js/dinner.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8">
 var STATE_KEY = '{{ app }}.{{ view }}.form';
 var BASE_URL = '{{ url('dinner:index') }}';
 
-;(function($, window, document, undefined){
-
-var pluginName = 'Tabs';
-var Tabs = function(elem, options){
-    this.elem = elem;
-    this.$elem = $(elem);
-    this.options = options;
-    this.metadata = this.$elem.data('tabs-options')
-}
-
-
-Tabs.prototype = {
-    defaults: {
-        activeTabClass: 'active',
-        activeButtonClass: 'active',
-        tabSelector: 'div.tab-pane',
-        buttonSelector: 'ul.nav-tabs li',
-        dataProperty: 'tab',
-    },
-    init: function(){
-        this.options = $.extend(true, {}, this.defaults, this.options,
-            this.metadata);
-        this.tab = this.getActiveTab().data(this.options.dataProperty);
-        this.activate();
-
-        return this;
-    },
-    getTabs: function(){
-        return this.$elem.find(this.options.tabSelector);
-    },
-    getButtons: function(){
-        return this.$elem.find(this.options.buttonSelector);
-    },
-    getActiveTab: function(){
-        return this.getTabs().filter('.' + this.options.activeTabClass);
-    },
-    getActiveButton: function(){
-        return this.getButtons().filter('.' + this.options.activeButtonClass);
-    },
-    getTab: function(tab){
-        return this.getTabs().filter(
-            '[data-' + this.options.dataProperty + '="' + tab + '"]');
-    },
-    getButton: function(tab){
-        return this.getButtons().filter(
-            '[data-' + this.options.dataProperty + '="' + tab + '"]');
-    },
-    activate: function(){
-        /* Support both with and without event */
-        var tab = this.tab;
-        if(arguments.length)tab = arguments[arguments.length - 1];
-
-        /* Make sure we set the current tab for the next call */
-        this.tab = tab;
-
-        /* Remove the active class from the button and tab to hide it */
-        this.getActiveTab().removeClass(this.options.activeTabClass);
-        this.getActiveButton().removeClass(this.options.activeButtonClass);
-
-        /* Add the active class to show the new button and tab */
-        this.getTab(tab).addClass(this.options.activeTabClass);
-        this.getButton(tab).addClass(this.options.activeButtonClass);
-
-        /* Cancel whatever event was linked to this */
-        return false;
-    },
-};
-
-$.fn.tabs = function(options){
-    return (new Tabs(this, options).init());
-};
-
-$.fn.tabsie = function(config){
-    var tab;
-    return {
-        getActiveTab: getActiveTab,
-        getActiveButton: getActiveButton,
-        getTab: getTab,
-        getButton: getButton,
-        getTabs: getTabs,
-        getButtons: getButtons,
-        activate: activate,
-    }
-    return {
-        getActiveTab: $.proxy(getActiveTab, this),
-        getActiveButton: $.proxy(getActiveButton, this),
-        getTab: $.proxy(getTab, this),
-        getButton: $.proxy(getButton, this),
-        getTabs: $.proxy(getTabs, this),
-        getButtons: $.proxy(getButtons, this),
-        activate: $.proxy(activate, this),
-    }
-}
-
-})(jQuery, window, document);
-
-
-var tabs = $('#signup_tabs').tabs({dataProperty: 'date'});
-History.Adapter.bind(window, 'statechange', function(e){
-    $('form').attr('action', document.location.pathname);
-    tabs.activate(History.getState().data.tab);
-});
-
-jQuery(function($){
-    var form = $('form#dinner_signup');
-    var visible_inputs =  form.find(':input:visible');
-
-    /* Restore the state from localStorage if available */
-    var state = localStorage.getItem(STATE_KEY)
-    if(state)
-        form.unserializeForm(state, {'override-values': true});
-
-    /* Save the form state (name, email, etc...) to localStorage */
-    function saveState(){
-        localStorage.setItem(STATE_KEY, visible_inputs.serialize());
-    }
-    visible_inputs
-        .on('keyup', saveState)
-        .on('change', saveState);
-
-    /* Making sure our tabs work with the browser history */
-    $('#signup_tabs').on('click', 'li[data-date]', function(e){
-        /* Change the url so reloads work :) */
-        var tab = $(this).data('date');
-        History.pushState({tab: tab}, null, BASE_URL + tab + '/');
-        return false;
-    });
-
-    /* Submit the forms with ajax */
-    $('#courses, #signup_tabs').on('click', 'button.btn', function(e){
-        var $this = $(this);
-        if(!$this.data('skip-validation') && !form.parsley('validate'))
-            return false;
-
-        /* Switch to the right tab */
-        var tab = $this.data('date');
-        if(tab){
-        History.pushState({tab: tab}, null, BASE_URL + tab + '/');
-        }
-
-        /* Set the button to the loading state */
-        $this.button('loading');
-
-        $.ajax({
-            url: document.location.href,
-            type: 'POST',
-            data: $.extend(
-                form.serializeArray(),
-                [{name: this.name, value: this.value}]
-            ),
-            success: function(data){
-                $('div#signup_tabs div.tabs-container').html(
-                    $(data).find('div#signup_tabs div.tabs-container').children());
-                $this.button('reset');
-                tabs.activate();
-            },
-            dataType: 'html'
-        });
-        return false;
-    });
-});
 </script>
 {% endblock footer_js %}

@@ -32,7 +32,7 @@ Eetgelegenheid - inschrijven
         {% endif %}
         </div>
 
-        <table class="table" id="courses">
+        <table class="table table-condensed" id="courses">
             <tr>
                 <th>{{ _('Datum') }}</th>
                 <th>{{ _('Kok(s)') }}</th>
@@ -40,7 +40,7 @@ Eetgelegenheid - inschrijven
             </tr>
 
             {% for dinner in create_form.dinners %}
-            <tr>
+            <tr class="bordered">
                 <td rowspan="2" title="{{ dinner.date }}">
                     {{ dinner.date.strftime('%A') }}
                     {% if user.has_perm('dinner.dinner_change') %}
@@ -81,8 +81,9 @@ Eetgelegenheid - inschrijven
             <h3>{{ _('Inschrijvingen') }}</h3>
             {% if not request.user.is_authenticated() %}
             <div class="alert alert-info">
-                <strong>Note!</strong>
-                You can only see your own signups if you are not logged in.
+                <strong>Let op!</strong>
+                Je moet ingelogd zijn om alle inschrijvingen te zien, tot die
+                tijd zie je alleen je eigen inschrijvingen.
             </div>
             {% endif %}
 

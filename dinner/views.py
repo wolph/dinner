@@ -66,8 +66,13 @@ def index(request, date, begin_date, end_date):
             if not request.ajax:
                 return request.redirect()
 
+    reservations_filter = None
+    # Make sure anonymous users can only see their own reservations
+    if not request.user.is_authenticated():
+        reservations_filter = list(user_reservations)
     # Get the existing reservations
-    reservations = models.Reservation.objects.get_days(begin_date, end_date)
+    reservations = models.Reservation.objects.get_days(
+        begin_date, end_date, reservations_filter)
     if request.user.is_authenticated():
         for reservation in reservations:
             if reservation.user == request.user:

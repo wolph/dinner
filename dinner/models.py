@@ -33,12 +33,15 @@ class DinnerManager(models.Manager):
 
 
 class ReservationManager(models.Manager):
-    def get_days(self, begin_date, end_date):
-        return self.filter(
+    def get_days(self, begin_date, end_date, reservations_filter=None):
+        reservations = self.all()
+        if reservations_filter is not None:
+            reservations = reservations.filter(pk__in=reservations_filter)
+
+        return reservations.filter(
             dinner__date__gte=begin_date,
             dinner__date__lt=end_date,
         ).order_by('dinner__date')[:]
-
 
 class Dinner(base_models.ModelBase):
     description = models.TextField(blank=True, default='')

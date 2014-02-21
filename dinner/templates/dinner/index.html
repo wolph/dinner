@@ -77,6 +77,13 @@ Eetgelegenheid - inschrijven
     <div id="signup_tabs">
         <div class="tabs-container">
             <h3>{{ _('Inschrijvingen') }}</h3>
+            {% if not request.user.is_authenticated() %}
+            <div class="alert alert-info">
+                <strong>Note!</strong>
+                You can only see your own signups if you are not logged in.
+            </div>
+            {% endif %}
+
             <ul class="nav nav-tabs">
             {% for dinner_date, reservations in reservations %}
             <li

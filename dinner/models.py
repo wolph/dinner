@@ -54,6 +54,10 @@ class Dinner(base_models.ModelBase):
     courses = models.ManyToManyField('Course', related_name='dinner')
     objects = DinnerManager()
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('dinner:index', [str(self.date)])
+
     @property
     def is_expired(self):
         end_time = datetime.datetime.combine(self.date, settings.DINNER_SIGNUP_UNTIL)
@@ -86,6 +90,7 @@ class Dinner(base_models.ModelBase):
 
     def __unicode__(self):
         return unicode(self.date)
+
 
     class Meta:
         unique_together = (

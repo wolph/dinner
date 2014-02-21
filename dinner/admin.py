@@ -72,6 +72,7 @@ class DinnerAdmin(reversion.VersionAdmin, tags_input_admin.TagsInputAdmin):
     raw_id_fields = ('cooks',)
     search_fields = ('description', 'cooks__username', 'courses__name')
     list_editable = ['description', 'price']
+    save_on_top = True
 
     inlines = [ReservationInline]
 

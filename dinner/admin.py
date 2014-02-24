@@ -10,11 +10,13 @@ import reversion
 
 class AdminSite(admin.AdminSite):
     def has_permission(self, request):
-        print 'has permission', request
-        return bool(koornbeurs_models.Group.objects.koks().filter(
-            users__username='Magnix',
-            #users__username=request.user.username,
-        ).count())
+        cook = bool(
+            koornbeurs_models.Group.objects
+            .cooks()
+            .filter(users__username=request.user.username)
+            .count()
+        )
+        return request.user.is_superuser or cook
 
 site = AdminSite('admin', app_name='admin')
 
@@ -95,6 +97,7 @@ class DinnerAdmin(reversion.VersionAdmin, tags_input_admin.TagsInputAdmin):
                 webgui_user.get_django_user()
 
         return super(DinnerAdmin, self).get_form(request, obj=obj, **kwargs)
+
 
 class ReservationAdmin(reversion.VersionAdmin):
     list_display = (u'id', 'user', 'name', 'email', 'comments', 'paid')

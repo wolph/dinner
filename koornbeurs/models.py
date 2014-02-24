@@ -2364,7 +2364,7 @@ class Grouping(models.Model):
 
 
 class GroupManager(models.Manager):
-    def koks(self):
+    def cooks(self):
         return self.filter(id__exact=self.model.KOK)
 
 
@@ -2402,7 +2402,7 @@ class Group(models.Model):
     objects = GroupManager()
 
     @property
-    def is_kok(self):
+    def is_cook(self):
         return self.id == self.KOK
 
     def __repr__(self):

@@ -20,8 +20,8 @@ class WebguiSessionBackend(object):
 
     def has_perm(self, user, perm, obj=None):
         if perm.startswith('dinner.'):
-            koks = models.Group.objects.koks().filter(
+            cooks = models.Group.objects.cooks().filter(
                 users__username=user.username,
             )
-            return bool(koks.count())
+            return bool(cooks.count())
 

@@ -10,15 +10,15 @@ import reversion
 
 class AdminSite(admin.AdminSite):
     def has_permission(self, request):
-        cook = bool(
+        is_cook = bool(
             koornbeurs_models.Group.objects
             .cooks()
             .filter(users__username=request.user.username)
             .count()
         )
-        return request.user.is_superuser or cook
+        return request.user.is_superuser or is_cook
 
-site = AdminSite('admin', app_name='admin')
+site = AdminSite('dinner_admin', app_name='admin')
 
 
 class CourseAdmin(reversion.VersionAdmin):

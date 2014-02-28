@@ -2793,8 +2793,8 @@ class WobjectAdmin(admin.ModelAdmin):
     )
 
 
-def _register(model, admin):
-    admin.site.register(model, admin)
+def _register(model, admin_class):
+    admin.site.register(model, admin_class)
 
 
 _register(models.AdSku, AdSkuAdmin)

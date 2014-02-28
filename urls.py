@@ -11,8 +11,8 @@ urlpatterns = urls.patterns(
              urls.include('tags_input.urls', namespace='tags_input')),
     urls.url(r'^dinner/', urls.include('dinner.urls', namespace='dinner')),
     urls.url(r'^dinner_admin/', urls.include(dinner_admin.site.urls),
-             name='dinner_admin'),
-    urls.url(r'^admin/', urls.include(admin.site.urls)),
+             name='admin'),
+    urls.url(r'^admin/', urls.include(admin.site.urls), name='admin'),
     urls.url(r'^$', base.RedirectView.as_view(
         pattern_name='dinner:index', permanent=False)),
 )

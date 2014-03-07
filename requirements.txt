@@ -20,7 +20,7 @@ django-tags-input==1.8.7
 django-devserver==0.7.0
 ## The following requirements were added by pip --freeze:
 BeautifulSoup==3.2.1
-MarkupSafe==0.18
+MarkupSafe==0.19
 MySQL-python==1.2.5
 WTForms==1.0.5
 WTForms-ParsleyJS==0.1.4

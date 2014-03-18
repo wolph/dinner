@@ -45,7 +45,7 @@ Eetgelegenheid - inschrijven
                     {{ dinner.date.strftime('%A') }}
                     {% if user.has_perm('dinner.dinner_change') %}
                     <br>
-                    <a href="{% url admin:dinner_dinner_change dinner.pk %}" class="btn btn-danger btn-xs">
+                    <a href="{% url admin:dinner_dinner_change dinner.pk %}" class="btn btn-danger btn-xs" target="_blank">
                         Edit <span class="glyphicon glyphicon-edit"></span>
                     </a>
                     {% endif %}

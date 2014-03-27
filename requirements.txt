@@ -10,8 +10,8 @@ South==0.8.4
 ipdb==0.8
 ipython==1.2.1
 lxml==3.3.3
-pep8==1.4.6
-pyflakes==0.7.3
+pep8==1.5.0
+pyflakes==0.8
 sqlparse==0.1.11
 virtualenv==1.11.4
 virtualenvwrapper==4.2

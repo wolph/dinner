@@ -58,11 +58,15 @@ LOGGING = {
 SECRET_KEY = '_!7kv(58rl%tu&8_r@4yrb#*^jq600wr^m57=$&sgf*=3!-ip7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+TEMPLATE_DEBUG = False
 
-TEMPLATE_DEBUG = True
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = (
+    'www.koornbeurs.nl',
+    'www.koornbeurs.nl.',
+    '.koornbeurs.nl',
+    '.koornbeurs.nl.',
+)
 
 
 # Application definition

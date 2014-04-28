@@ -1,0 +1,50 @@
+{% extends 'dinner/base.html' %}
+
+{% import 'dinner/_macros.html' as dinner_macros %}
+
+{% block header_title %}
+Eters {{ date }}
+{% endblock header_title %}
+
+{% block body %}
+{{ super() }}
+
+{% for course, reservations in course_reservations.iteritems() %}
+    <h4>{{ course }} <span class="badge">{{ reservations|count }} </span></h4>
+    <table class="table">
+        <tr>
+            <th>{{ _('Betaald') }}</th>
+            <th>{{ _('Naam') }}</th>
+            <th>{{ _('Email') }}</th>
+            <th>{{ _('Opmerkingen') }}</th>
+        </tr>
+
+        {% if user.has_perm('dinner.delete_reservation') %}
+        {% for reservation in reservations %}
+        <tr>
+            <td><div style="width: 20px; height: 20px; display: block; border: 1px solid #ccc;"></div></td>
+            <td>{{ reservation.name }}</td>
+            <td>{{ reservation.email }}</td>
+            <td>{{ reservation.comments }}</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        You need to be logged in for this feature
+        {% endif %}
+    </table>
+{% endfor %}
+
+{% endblock body %}
+
+{% block footer_js %}
+{{ super() }}
+
+<script src="{{ STATIC_URL }}js/dinner.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+var STATE_KEY = '{{ app }}.{{ view }}.form';
+var BASE_URL = '{{ url('dinner:index') }}';
+window.print();
+setTimeout('self.close();', 100);
+</script>
+{% endblock footer_js %}
+

@@ -19,6 +19,19 @@
     .table > tbody > tr.bordered{
         border-top: 3px solid #ddd;
     }
+    #signup_tabs .nav > li > a{
+        padding: 5px;
+    }
+</style>
+
+<style type="text/css" media="print">
+    .dont-print{
+        display: none !important;
+    }
+    body{
+        background-color: #fff;
+        margin: 0px;
+    }
 </style>
 {% endcompress %}
 
@@ -42,7 +55,7 @@
 
         <ul class="nav navbar-nav">
             {% if not request.user.is_authenticated() %}
-            <li><a href="http://koornbeurs.nl/home?op=auth;method=init">Login</a></li>
+            <li><a target="_top" href="http://koornbeurs.nl/home?op=auth;method=init">Login</a></li>
             {% endif %}
         </ul>
         <h3 class="text-muted">{% block body_title %}{% endblock body_title %}</h3>
@@ -54,7 +67,7 @@
     {% endblock body %}
 
     <div class="footer">
-        <p><a href="http://wol.ph/">&copy; Wolph 2013</a></p>
+        <p><a href="http://wol.ph/">&copy; Wolph 2014</a></p>
     </div>
 
 </div>

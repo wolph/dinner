@@ -3,6 +3,7 @@ from django_utils import view_decorators
 from . import forms
 from . import models
 from . import utils
+import collections
 import datetime
 import itertools
 import functools
@@ -33,6 +34,23 @@ def parse_date(f):
 def index(request, date, begin_date, end_date):
     done = False
     data = request.POST or None
+
+    if request.GET.get('print'):
+        reservations = list(
+            models.Reservation.objects
+            .filter(dinner__date=date)
+            .order_by(
+                'course',
+                'email',
+                'name',
+            ),
+        )
+        request.template = 'dinner/print.html'
+        key = lambda r: r.course
+        request.context['course_reservations'] = dict(
+            (k, list(vs)) for k, vs in itertools.groupby(
+                reservations, key))
+        return
 
     class Obj(object):
         pass
@@ -97,6 +115,7 @@ def index(request, date, begin_date, end_date):
     reservations_per_day = dict(
         (k, list(vs)) for k, vs in
         itertools.groupby(reservations, lambda r: r.dinner.date))
+
     reservations = []
     for day in days:
         # Get all reservations per day

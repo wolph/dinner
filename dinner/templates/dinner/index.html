@@ -42,10 +42,10 @@ Eetgelegenheid - inschrijven
             {% for dinner in create_form.dinners %}
             <tr class="bordered">
                 <td rowspan="2" title="{{ dinner.date }}">
-                    {{ dinner.date.strftime('%A') }}
+                    {{ dinner.date.strftime('%m-%d %A') }}
                     {% if user.has_perm('dinner.dinner_change') %}
                     <br>
-                    <a href="{% url admin:dinner_dinner_change dinner.pk %}" class="btn btn-danger btn-xs" target="_blank">
+                    <a href="{% url dinner_admin:dinner_dinner_change dinner.pk %}" class="btn btn-danger btn-xs" target="_blank">
                         Edit <span class="glyphicon glyphicon-edit"></span>
                     </a>
                     {% endif %}
@@ -79,6 +79,7 @@ Eetgelegenheid - inschrijven
     <div id="signup_tabs">
         <div class="tabs-container">
             <h3>{{ _('Inschrijvingen') }}</h3>
+
             {% if not request.user.is_authenticated() %}
             <div class="alert alert-info">
                 <strong>Let op!</strong>
@@ -101,7 +102,6 @@ Eetgelegenheid - inschrijven
                 </a>
             </li>
             {% endfor %}
-            </ul>
 
             <div class="tab-content">
                 {% for dinner_date, reservations in reservations %}
@@ -137,6 +137,13 @@ Eetgelegenheid - inschrijven
                         </tr>
                         {% endfor %}
                     </table>
+                    {% if user.has_perm('dinner.delete_reservation') %}
+                    <span class="pull-right">
+                        <a href="?print=true" target="_blank" class="btn btn-info btn-xs">
+                            Printen <span class="glyphicon glyphicon-print"></span>
+                        </a>
+                    </span>
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>
@@ -153,6 +160,5 @@ Eetgelegenheid - inschrijven
 <script type="text/javascript" charset="utf-8">
 var STATE_KEY = '{{ app }}.{{ view }}.form';
 var BASE_URL = '{{ url('dinner:index') }}';
-
 </script>
 {% endblock footer_js %}

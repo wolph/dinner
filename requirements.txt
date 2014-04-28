@@ -34,3 +34,4 @@ six==1.6.1
 stevedore==0.14.1
 virtualenv-clone==0.2.4
 wsgiref==0.1.2
+raven==4.2.1

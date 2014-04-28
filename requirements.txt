@@ -1,17 +1,17 @@
 -f http://c.pypi.python.org/simple
-Django==1.6.2
+Django==1.6.3
 anyjson==0.3.3
-django-utils2==1.6.1
+django-utils2==1.7.0
 python-utils==1.5.2
 django-reversion==1.8.0
 Coffin==0.3.8
 Jinja2==2.7.2
 South==0.8.4
 ipdb==0.8
-ipython==1.2.1
-lxml==3.3.3
-pep8==1.5.0
-pyflakes==0.8
+ipython==2.0.0
+lxml==3.3.5
+pep8==1.5.6
+pyflakes==0.8.1
 sqlparse==0.1.11
 virtualenv==1.11.4
 virtualenvwrapper==4.2
@@ -20,7 +20,7 @@ django-tags-input==1.8.8
 django-devserver==0.7.0
 ## The following requirements were added by pip --freeze:
 BeautifulSoup==3.2.1
-MarkupSafe==0.19
+MarkupSafe==0.21
 MySQL-python==1.2.5
 WTForms==1.0.5
 WTForms-ParsleyJS==0.1.4
@@ -31,6 +31,7 @@ django-inspectdb==0.2.1
 gunicorn==18.0
 guppy==0.1.10
 six==1.6.1
-stevedore==0.14.1
-virtualenv-clone==0.2.4
+stevedore==0.15
+virtualenv-clone==0.2.5
 wsgiref==0.1.2
+raven==4.2.1

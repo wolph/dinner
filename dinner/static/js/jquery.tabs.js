@@ -14,7 +14,7 @@ Tabs.prototype = {
         activeButtonClass: 'active',
         tabSelector: 'div.tab-pane',
         buttonSelector: 'ul.nav-tabs li',
-        dataProperty: 'tab',
+        dataProperty: 'tab'
     },
     init: function(){
         this.options = $.extend(true, {}, this.defaults, this.options,
@@ -62,7 +62,7 @@ Tabs.prototype = {
 
         /* Cancel whatever event was linked to this */
         return false;
-    },
+    }
 };
 
 $.fn.tabs = function(options){

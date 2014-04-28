@@ -6,6 +6,27 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
+<script src="http://d3nslu0hdya83q.cloudfront.net/dist/1.0/raven.min.js"></script>
+<script>
+    if(typeof Raven !== 'undefined'){
+        Raven.config('http://eea550b089554afc8c50a380bd2b2f83@sentry.wol.ph/6', {
+            whitelistUrls: [/koornbeurs\.nl/, /www\.koornbeurs\.nl/]
+        }).install();
+
+        if(typeof Raven.process !== 'undefined')window.onerror = Raven.process;
+
+        {% if request.user.is_authenticated() %}
+        Raven.setUser({
+            id: '{{ request.user.id|escape }}',
+            email: '{{ request.user.email|escape }}',
+            username: '{{ request.user.username|escape }}',
+            first_name: '{{ request.user.first_name|escape }}',
+            last_name: '{{ request.user.last_name|escape }}'
+        });
+        {% endif %}
+    }
+</script>
+
 <title>{% block title %}{% endblock title %}</title>
 
 {% block head %}
@@ -46,6 +67,12 @@
 <div class="container-fluid">
     <nav class="navbar navbar-default" role="navigation">
 
+<!--[if lt IE 9]>
+<div class="alert alert-danger">Your browser is unfortunately _way_ too old to be supported.
+Please use a different browser like Chrome or Firefox (or at least, IE9)
+</div>
+<![endif]-->
+
     <a class="navbar-brand" href="{% url 'dinner:index' %}">{% block header_title %}Dinner Signup{% endblock header_title %}</a>
         <div class="navbar-header pull-right">
         {% block header %}
@@ -75,7 +102,7 @@
 {% block footer %}
 {% compress js %}
 {% block footer_js %}
-<script src="{{ STATIC_URL }}jquery/jquery-2.0.3.js" type="text/javascript" charset="utf-8"></script>
+<script src="{{ STATIC_URL }}jquery/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
 <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
 <script src="{{ STATIC_URL }}parsley/parsley.js" type="text/javascript" charset="utf-8"></script>
 <script src="{{ STATIC_URL }}tagmanager/tagmanager.js" type="text/javascript" charset="utf-8"></script>
@@ -89,6 +116,10 @@
 <script src="{{ STATIC_URL }}js/django_csrf.js" type="text/javascript" charset="utf-8"></script>
 {% endblock footer_js %}
 {% endcompress %}
+
+<!--[if lt IE 9]>
+<script src="{{ STATIC_URL }}jquery/jquery-migrate-1.2.1.js" type="text/javascript" charset="utf-8"></script>
+<![endif]-->
 
 {% endblock footer %}
 

@@ -48,7 +48,7 @@ jQuery(function($){
             type: 'POST',
             data: $.extend(
                 form.serializeArray(),
-                [{name: this.name, value: this.value}]
+                [{name: $this.attr('name'), value: $this.val()}]
             ),
             success: function(data){
                 $('div#signup_tabs div.tabs-container').html(

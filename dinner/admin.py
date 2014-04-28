@@ -100,7 +100,8 @@ class DinnerAdmin(reversion.VersionAdmin, tags_input_admin.TagsInputAdmin):
 
 
 class ReservationAdmin(reversion.VersionAdmin):
-    list_display = (u'id', 'user', 'name', 'email', 'comments', 'paid')
+    list_display = (u'id', 'user', 'name', 'email', 'comments', 'paid',
+                    'dinner')
     list_filter = ('user',)
     raw_id_fields = ('course', 'dinner')
     search_fields = ('name',)

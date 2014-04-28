@@ -87,6 +87,7 @@ INSTALLED_APPS = (
     'reversion',
     'koornbeurs',
     'gunicorn',
+    'raven.contrib.django.raven_compat',
 )
 
 MIDDLEWARE_CLASSES = (

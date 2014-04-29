@@ -16,7 +16,7 @@ sqlparse==0.1.11
 virtualenv==1.11.4
 virtualenvwrapper==4.2
 python-dateutil==2.2
-django-tags-input==1.8.8
+django-tags-input==1.8.9
 django-devserver==0.7.0
 ## The following requirements were added by pip --freeze:
 BeautifulSoup==3.2.1

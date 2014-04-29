@@ -53,7 +53,11 @@ jQuery(function($){
             success: function(data){
                 $('div#signup_tabs div.tabs-container').html(
                     $(data).find('div#signup_tabs div.tabs-container').children());
-                $this.button('reset');
+                $this.button('added').addClass('btn-warning');
+                setTimeout(function(){
+                    $this.button('reset')
+                    $this.removeClass('btn-warning')
+                }, 2500);
                 tabs.activate();
             },
             dataType: 'html'

@@ -1,10 +1,9 @@
-/media
-/templates
-/db.sqlite3
-/static
 /bootstrap-3.0.2
+/db.sqlite3
+/dinner/static/js/build/
+/django
+/local_settings.py
+/media
+/static
+/templates
 .*
-local_settings.py
-django
-static
-dinner/static

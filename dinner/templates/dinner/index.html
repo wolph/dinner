@@ -55,7 +55,7 @@ Eetgelegenheid - inschrijven
                 </td>
                 <td>
                     {% for cook in dinner.cooks.all() %}
-                    <abbr title="{{ cook.first_name }} {{ cook.last_name }} ({{ cook.username }})">{{ cook.first_name }}</abbr>
+                    <abbr title="{{ cook.first_name }} {{ cook.last_name[:1] }} ({{ cook.username }})">{{ cook.first_name }}</abbr>
                     {%- if not loop.last %},{% endif %}
                     {% else %}
                     ...

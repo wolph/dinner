@@ -16,6 +16,7 @@ Eters {{ date }}
             <th>{{ _('Betaald') }}</th>
             <th>{{ _('Naam') }}</th>
             <th>{{ _('Email') }}</th>
+            <th>{{ _('Allergieën') }}</th>
             <th>{{ _('Opmerkingen') }}</th>
         </tr>
 
@@ -25,6 +26,7 @@ Eters {{ date }}
             <td><div style="width: 20px; height: 20px; display: block; border: 1px solid #ccc;"></div></td>
             <td>{{ reservation.name }}</td>
             <td>{{ reservation.email }}</td>
+            <td>{{ reservation.allergies }}</td>
             <td>{{ reservation.comments }}</td>
         </tr>
         {% endfor %}

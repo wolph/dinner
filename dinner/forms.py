@@ -1,3 +1,4 @@
+# vim: set fileencoding=utf-8 :
 from django.conf import settings
 import wtforms
 import wtformsparsleyjs
@@ -12,7 +13,7 @@ class BootstrapButtonWidgetBase(wtforms.widgets.SubmitInput):
         if 'value' not in kwargs:
             kwargs['value'] = field._value()
         kwargs.setdefault('type', 'submit')
-        kwargs.setdefault('class', 'btn btn-small')
+        kwargs.setdefault('class', 'btn btn-sm')
 
         if kwargs.pop('disabled', False):
             kwargs['disabled'] = 'disabled'
@@ -36,7 +37,7 @@ class BootstrapButtonWidgetBase(wtforms.widgets.SubmitInput):
 
 class BootstrapAddButtonWidget(BootstrapButtonWidgetBase):
     def __call__(self, field, **kwargs):
-        kwargs.setdefault('class', 'btn btn-success btn-small')
+        kwargs.setdefault('class', 'btn btn-success btn-sm')
         kwargs.setdefault('icon', 'plus')
 
         return BootstrapButtonWidgetBase.__call__(self, field, **kwargs)
@@ -45,7 +46,7 @@ class BootstrapAddButtonWidget(BootstrapButtonWidgetBase):
 class BootstrapRemoveButtonWidget(BootstrapAddButtonWidget):
     def __call__(self, field, **kwargs):
         field.label.text = ''
-        kwargs.setdefault('class', 'btn btn-danger btn-small')
+        kwargs.setdefault('class', 'btn btn-danger btn-sm')
         kwargs.setdefault('icon', 'remove')
 
         return BootstrapButtonWidgetBase.__call__(self, field, **kwargs)
@@ -100,14 +101,17 @@ class ReservationCreateForm(wtforms.Form):
     __metaclass__ = DailyCourseMeta
     name = wtformsparsleyjs.StringField(_('Name'), validators=[
         wtformsparsleyjs.InputRequired(),
-        wtformsparsleyjs.Length(3, 100),
+        wtformsparsleyjs.Length(2, 100),
     ])
     email = wtformsparsleyjs.StringField(_('Email'), validators=[
         wtformsparsleyjs.InputRequired(),
         wtformsparsleyjs.Email(_('Sorry, not a valid email address.')),
         wtformsparsleyjs.Length(3, 75),
     ])
-    comment = wtformsparsleyjs.StringField(_('Opmerkingen'), validators=[
+    comments = wtformsparsleyjs.StringField(_('Opmerkingen'), validators=[
+        wtformsparsleyjs.Length(0, 100),
+    ])
+    allergies = wtformsparsleyjs.StringField(_(u'Allergieën'), validators=[
         wtformsparsleyjs.Length(0, 100),
     ])
 
@@ -143,7 +147,8 @@ class ReservationCreateForm(wtforms.Form):
             user=self.user.is_authenticated() and self.user or None,
             name=data['name'],
             email=data['email'],
-            comments=data['comment'],
+            comments=data['comments'],
+            allergies=data['allergies'],
         )
 
         reservations = []

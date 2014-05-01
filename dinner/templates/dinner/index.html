@@ -18,7 +18,10 @@ Eetgelegenheid - inschrijven
         {{ dinner_macros.render_field(create_form.email) }}
     </div>
     <div class="form-group">
-        {{ dinner_macros.render_field(create_form.comment, **{'parsley-validation-minlength': 0}) }}
+        {{ dinner_macros.render_field(create_form.allergies, **{'parsley-validation-minlength': 0}) }}
+    </div>
+    <div class="form-group">
+        {{ dinner_macros.render_field(create_form.comments, **{'parsley-validation-minlength': 0}) }}
     </div>
 
     <div>
@@ -111,7 +114,7 @@ Eetgelegenheid - inschrijven
                         <tr>
                             <th>{{ _('Naam') }}</th>
                             <th>{{ _('Keuze') }}</th>
-                            <th>{{ _('Opmerkingen') }}</th>
+                            <th>{{ _('Allergieën/Opmerkingen') }}</th>
                             <th>{{ _('Verwijderen') }}</th>
                         </tr>
 
@@ -119,7 +122,11 @@ Eetgelegenheid - inschrijven
                         <tr>
                             <td>{{ reservation.name }}</td>
                             <td>{{ reservation.course }}</td>
-                            <td>{{ reservation.comments }}</td>
+                            <td>
+                                {% if reservation.allergies %}
+                                    {{ reservation.allergies }}<br>
+                                {% endif %}
+                                {{ reservation.comments }}</td>
                             <td>{{ reservation.field(
                                 disabled=(
                                     (

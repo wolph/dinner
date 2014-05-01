@@ -119,6 +119,7 @@ class Reservation(base_models.NameMixin, base_models.ModelBase):
     name = models.CharField(max_length=100)
     email = models.EmailField()
     comments = models.TextField(null=True, blank=True)
+    allergies = models.TextField(null=True, blank=True)
     dinner = models.ForeignKey(Dinner)
     course = models.ForeignKey(Course)
     paid = models.DecimalField(default=0, max_digits=8, decimal_places=2)

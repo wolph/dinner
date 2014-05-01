@@ -14,7 +14,7 @@ jQuery(function($){
 
     /* Save the form state (name, email, etc...) to localStorage */
     function saveState(){
-        localStorage.setItem(STATE_KEY, visible_inputs.serialize());
+        localStorage.setItem(STATE_KEY, visible_inputs.not('#comments').serialize());
     }
     visible_inputs
         .on('keyup', saveState)

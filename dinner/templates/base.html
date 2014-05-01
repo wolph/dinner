@@ -82,7 +82,7 @@ Please use a different browser like Chrome or Firefox (or at least, IE9)
 
         <ul class="nav navbar-nav">
             {% if not request.user.is_authenticated() %}
-            <li><a target="_top" href="http://koornbeurs.nl/home?op=auth;method=init">Login</a></li>
+            <li><a target="_top" href="http://koornbeurs.nl/opschepperij/aanmelden?op=auth;method=init">Login</a></li>
             {% endif %}
         </ul>
         <h3 class="text-muted">{% block body_title %}{% endblock body_title %}</h3>

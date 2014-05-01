@@ -57,6 +57,7 @@ class CourseInline(admin.TabularInline):
 class ReservationInline(admin.TabularInline):
     model = models.Reservation
     readonly_fields = ('user', 'email',)
+    extra = 0
     fields = (
         'name',
         'paid',

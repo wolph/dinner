@@ -203,6 +203,9 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 365
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
+LOGIN_URL = '/opschepperij/aanmelden?op=auth;method=init'
+LOGOUT_URL = '/opschepperij/aanmelden?op=auth;method=logout'
+
 DJANGO_UTILS_USE_JINJA = True
 
 INTERNAL_IPS = (

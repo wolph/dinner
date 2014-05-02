@@ -76,13 +76,12 @@ Please use a different browser like Chrome or Firefox (or at least, IE9)
     <a class="navbar-brand" href="{% url 'dinner:index' %}">{% block header_title %}Dinner Signup{% endblock header_title %}</a>
         <div class="navbar-header pull-right">
         {% block header %}
-        {% if request.user.is_authenticated() %}
-        <p class="navbar-text">Signed in as {{ request.user.first_name }} {{ request.user.last_name }}</p>
-        {% endif %}
 
         <ul class="nav navbar-nav">
-            {% if not request.user.is_authenticated() %}
-            <li><a target="_top" href="http://koornbeurs.nl/opschepperij/aanmelden?op=auth;method=init">Login</a></li>
+            {% if request.user.is_authenticated() %}
+            <li><a target="_top" href="{% url logout %}">{{ request.user.first_name }} {{ request.user.last_name }} - Logout</a></li>
+            {% else %}
+            <li><a target="_top" href="{% url login %}">Login</a></li>
             {% endif %}
         </ul>
         <h3 class="text-muted">{% block body_title %}{% endblock body_title %}</h3>

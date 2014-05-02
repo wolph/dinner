@@ -1,5 +1,5 @@
-import models
 import time
+import models
 from django.contrib.auth import models as auth_models
 
 class WebguiSessionBackend(object):
@@ -7,7 +7,7 @@ class WebguiSessionBackend(object):
         try:
             session = models.UserSession.objects.get(
                 session_id=session_id,
-                expires__lte=time.time(),
+                expires__gte=time.time(),
             )
         except models.UserSession.DoesNotExist:
             return

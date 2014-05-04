@@ -15,7 +15,7 @@ def get_days_range(date=None, days=7):
 
     day_of_week = date.weekday()
     if day_of_week >= LAST_DAY_OF_WEEK:
-        day_of_week = -7
+        day_of_week -= 7
 
     to_beginning_of_week = datetime.timedelta(days=day_of_week)
     beginning_of_week = date - to_beginning_of_week

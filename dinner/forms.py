@@ -46,7 +46,7 @@ class BootstrapAddButtonWidget(BootstrapButtonWidgetBase):
 class BootstrapRemoveButtonWidget(BootstrapAddButtonWidget):
     def __call__(self, field, **kwargs):
         field.label.text = ''
-        kwargs.setdefault('class', 'btn btn-danger btn-sm')
+        kwargs.setdefault('class', 'btn btn-danger btn-xs')
         kwargs.setdefault('icon', 'remove')
 
         return BootstrapButtonWidgetBase.__call__(self, field, **kwargs)

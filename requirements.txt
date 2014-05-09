@@ -14,7 +14,7 @@ django-compressor==1.3
 django-devserver==0.7.0
 django-inspectdb==0.2.1
 django-reversion==1.8.0
-django-tags-input==1.8.9
+django-tags-input==1.9.0
 django-utils2==1.7.0
 gunicorn==18.0
 guppy==0.1.10

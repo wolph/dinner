@@ -145,7 +145,7 @@ Eetgelegenheid - inschrijven
                         </tr>
                         {% endfor %}
                     </table>
-                    {% if user.has_perm('dinner.delete_reservation') %}
+                    {% if user.is_authenticated() %}
                     <span class="pull-right">
                         <a href="?print=true" target="_blank" class="btn btn-info btn-xs">
                             Printen <span class="glyphicon glyphicon-print"></span>

@@ -2606,7 +2606,6 @@ class TransactionItemAdmin(admin.ModelAdmin):
 
 
 class UserLoginLogAdmin(admin.ModelAdmin):
-
     list_display = (
         u'id',
         'user',
@@ -2617,7 +2616,6 @@ class UserLoginLogAdmin(admin.ModelAdmin):
         'session_id',
         'last_page_viewed',
     )
-    list_filter = ('user',)
 
 
 class UserProfileCategoryAdmin(admin.ModelAdmin):
@@ -2634,7 +2632,8 @@ class UserProfileCategoryAdmin(admin.ModelAdmin):
 
 
 class UserProfileDataAdmin(admin.ModelAdmin):
-
+    search_fields = ['email', 'first_name', 'last_name']
+    raw_id_fields = ('user',)
     list_display = (
         'user',
         'email',
@@ -2738,7 +2737,7 @@ class UserprefAdmin(admin.ModelAdmin):
 
 
 class UserAdmin(admin.ModelAdmin):
-
+    search_fields = ('username',)
     list_display = (
         'id',
         'username',

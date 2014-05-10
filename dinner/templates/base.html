@@ -68,10 +68,17 @@
     <nav class="navbar navbar-default" role="navigation">
 
 <!--[if lt IE 9]>
-<div class="alert alert-danger">Your browser is unfortunately _way_ too old to be supported.
+<div class="alert alert-danger hidden-print">Your browser is unfortunately _way_ too old to be supported.
 Please use a different browser like Chrome or Firefox (or at least, IE9)
 </div>
 <![endif]-->
+
+<div id="small-screen" class="alert alert-warning alert-dismissable hidden-print" style="display: none;">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <a class="alert-link" target="_top" href="{{ request.path }}">
+        You appear to be using a browser with a small screen, click here to go fullscreen.
+    </a>
+</div>
 
     <a class="navbar-brand" href="{% url 'dinner:index' %}">{% block header_title %}Dinner Signup{% endblock header_title %}</a>
         <div class="navbar-header pull-right">
@@ -115,6 +122,16 @@ Please use a different browser like Chrome or Firefox (or at least, IE9)
 <script src="{{ STATIC_URL }}js/django_csrf.js" type="text/javascript" charset="utf-8"></script>
 {% endblock footer_js %}
 {% endcompress %}
+
+<script type="text/javascript" charset="utf-8">
+    if(parent.document != document){
+        parent.document.body.onresize=(function(){
+            var width = 1 * parent.document.body.clientWidth;
+            $('#small-screen').toggle(width < 725);
+        });
+        parent.document.body.onresize();
+    }
+</script>
 
 <!--[if lt IE 9]>
 <script src="{{ STATIC_URL }}jquery/jquery-migrate-1.2.1.js" type="text/javascript" charset="utf-8"></script>

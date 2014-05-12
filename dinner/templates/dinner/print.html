@@ -20,7 +20,7 @@ Eters {{ date }}
             <th>{{ _('Opmerkingen') }}</th>
         </tr>
 
-        {% if user.has_perm('dinner.delete_reservation') %}
+        {% if user.is_authenticated() %}
         {% for reservation in reservations %}
         <tr>
             <td><div style="width: 20px; height: 20px; display: block; border: 1px solid #ccc;"></div></td>

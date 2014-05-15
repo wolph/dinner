@@ -1,6 +1,6 @@
 BeautifulSoup==3.2.1
 Coffin==0.3.8
-Django==1.6.4
+Django==1.6.5
 Jinja2==2.7.2
 MarkupSafe==0.23
 MySQL-python==1.2.5
@@ -25,7 +25,7 @@ pep8==1.5.6
 pyflakes==0.8.1
 python-dateutil==2.2
 python-utils==1.5.2
-pytz==2014.2
+pytz==2014.3
 raven==4.2.1
 six==1.6.1
 sqlparse==0.1.11

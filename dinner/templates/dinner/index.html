@@ -93,19 +93,20 @@ Eetgelegenheid - inschrijven
             {% endif %}
 
             <ul class="nav nav-tabs">
-            {% for dinner_date, reservations in reservations %}
-            <li
-                class="{% if date == dinner_date %}active{% endif %}"
-                    data-date="{{ dinner_date }}">
-                <a
-                    href="{% url 'dinner:index' date=dinner_date %}"
-                    title="{{ dinner_date }}">
-                    {{ dinner_date.strftime('%A') }}
-                    <span class="label {% if reservations %}label-danger{% else %}label-default{% endif %}"
-                    >{{ reservations|length }}</span>
-                </a>
-            </li>
-            {% endfor %}
+                {% for dinner_date, reservations in reservations %}
+                <li
+                    class="{% if date == dinner_date %}active{% endif %}"
+                        data-date="{{ dinner_date }}">
+                    <a
+                        href="{% url 'dinner:index' date=dinner_date %}"
+                        title="{{ dinner_date }}">
+                        {{ dinner_date.strftime('%A') }}
+                        <span class="label {% if reservations %}label-danger{% else %}label-default{% endif %}"
+                        >{{ reservations|length }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
 
             <div class="tab-content">
                 {% for dinner_date, reservations in reservations %}

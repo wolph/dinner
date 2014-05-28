@@ -165,7 +165,7 @@ DEFAULT_DINNER_COURSES = [
     'vlees',
     'vego',
 ]
-DINNER_SIGNUP_UNTIL = datetime.time(20)
+DINNER_SIGNUP_UNTIL = datetime.time(14)
 
 def auth_user_queryset(*args, **kwargs):
     from koornbeurs.models import User

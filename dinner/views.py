@@ -96,20 +96,38 @@ def index(request, date, begin_date, end_date):
             if reservation.user == request.user:
                 user_reservations[reservation.pk] = reservation
 
-    # Remove reservations when asked
-    remove_form = forms.get_reservation_remove_form(
-        reservations=reservations,
-        user=request.user,
-        user_reservations=user_reservations,
-        formdata=data,
-    )
-    if not done and data and remove_form.validate():
-        for reservation in remove_form.save():
-            user_reservations.pop(reservation.pk, None)
+    pay_form = None
+    remove_form = None
+    if request.GET.get('tapper'):
+        # Mark reservations as paid when asked
+        pay_form = forms.get_reservation_pay_form(
+            reservations=reservations,
+            user=request.user,
+            user_reservations=user_reservations,
+            formdata=data,
+        )
+        if not done and data and pay_form.validate():
+            for reservation in pay_form.save():
+                user_reservations.pop(reservation.pk, None)
 
-        request.session.modified = True
-        if request.ajax:
-            return request.redirect()
+            request.session.modified = True
+            if request.ajax:
+                return request.redirect(request.get_full_path())
+    else:
+        # Remove reservations when asked
+        remove_form = forms.get_reservation_remove_form(
+            reservations=reservations,
+            user=request.user,
+            user_reservations=user_reservations,
+            formdata=data,
+        )
+        if not done and data and remove_form.validate():
+            for reservation in remove_form.save():
+                user_reservations.pop(reservation.pk, None)
+
+            request.session.modified = True
+            if request.ajax:
+                return request.redirect()
 
     days = utils.get_days(begin_date, end_date - datetime.timedelta(days=1))
     reservations_per_day = dict(
@@ -123,6 +141,7 @@ def index(request, date, begin_date, end_date):
 
     request.context['create_form'] = create_form
     request.context['remove_form'] = remove_form
+    request.context['pay_form'] = pay_form
     request.context['reservations'] = reservations
     request.context['user_reservations'] = set(user_reservations)
     request.context['date'] = date

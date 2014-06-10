@@ -35,6 +35,14 @@ class BootstrapButtonWidgetBase(wtforms.widgets.SubmitInput):
         )
 
 
+class BootstrapPayButtonWidget(BootstrapButtonWidgetBase):
+    def __call__(self, field, **kwargs):
+        kwargs.setdefault('class', 'btn btn-warning btn-sm')
+        kwargs.setdefault('icon', 'euro')
+
+        return BootstrapButtonWidgetBase.__call__(self, field, **kwargs)
+
+
 class BootstrapAddButtonWidget(BootstrapButtonWidgetBase):
     def __call__(self, field, **kwargs):
         kwargs.setdefault('class', 'btn btn-success btn-sm')
@@ -64,6 +72,11 @@ class BootstrapButtonsWidget(object):
 
         html.append('</div>')
         return wtforms.widgets.HTMLString(''.join(html))
+
+
+class BootstrapPayButtonsField(wtforms.SelectMultipleField):
+    widget = BootstrapButtonsWidget()
+    option_widget = BootstrapPayButtonWidget()
 
 
 class BootstrapAddButtonsField(wtforms.SelectMultipleField):
@@ -223,6 +236,57 @@ def get_reservation_remove_form(user, user_reservations, reservations,
 
     form = UserReservationRemoveForm(user, user_reservations, reservations,
                                      formdata=formdata)
+
+    for i, reservation in enumerate(reservations):
+        reservation.field = getattr(form, 'reservation_%d' % i)
+        reservation.field.dinner = reservation.dinner
+
+    return form
+
+
+class ReservationPayForm(wtforms.Form):
+    def __init__(self, user, user_reservations, reservations, *args, **kwargs):
+        self.user = user
+        self.user_reservations = user_reservations
+        self.reservations = reservations
+
+        wtforms.Form.__init__(self, *args, **kwargs)
+
+    def save(self):
+        data = self.data
+        ids = set()
+        for k, vs in data.iteritems():
+            if k.startswith('reservation_'):
+                ids |= set(vs)
+
+        reservations_list = []
+        if ids:
+            reservations_query = models.Reservation.objects.filter(pk__in=ids)
+            # Materialize list to return later, otherwise it'd be empty because
+            # of the delete
+            reservations_list += list(reservations_query)
+            reservations_query.update(paid=4)
+
+        return reservations_list
+
+
+def get_reservation_pay_form(user, user_reservations, reservations,
+                             formdata=None):
+    class UserReservationPayForm(ReservationPayForm):
+        pass
+
+    validators = []
+
+    for i, reservation in enumerate(reservations):
+        field = BootstrapPayButtonsField(
+            choices=[(reservation.pk, '')],
+            coerce=int,
+            validators=validators,
+        )
+        setattr(UserReservationPayForm, 'reservation_%d' % i, field)
+
+    form = UserReservationPayForm(user, user_reservations, reservations,
+                                  formdata=formdata)
 
     for i, reservation in enumerate(reservations):
         reservation.field = getattr(form, 'reservation_%d' % i)

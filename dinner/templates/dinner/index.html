@@ -116,7 +116,13 @@ Eetgelegenheid - inschrijven
                             <th>{{ _('Naam') }}</th>
                             <th>{{ _('Keuze') }}</th>
                             <th>{{ _('Allergieën/Opmerkingen') }}</th>
-                            <th>{{ _('Verwijderen') }}</th>
+                            <th>
+                                {% if user.is_authenticated() and request.GET.get('tapper') %}
+                                {{ _('Betalen') }}
+                                {% else %}
+                                {{ _('Verwijderen') }}
+                                {% endif %}
+                            </th>
                         </tr>
 
                         {% for reservation in reservations %}
@@ -128,26 +134,41 @@ Eetgelegenheid - inschrijven
                                     {{ reservation.allergies }}<br>
                                 {% endif %}
                                 {{ reservation.comments }}</td>
-                            <td>{{ reservation.field(
-                                disabled=(
-                                    (
-                                        reservation.dinner.is_expired
-                                        or reservation.pk not in user_reservations
-                                    )
-                                    and not user.has_perm('dinner.delete_reservation')
-                                ),
-                                button={
-                                    'data-skip-validation': 'true',
-                                    'data-loading-text': 'Removing...',
-                                    'autocomplete': 'off',
-                                },
-                            ) }}
+                            <td>
+                                {% if user.is_authenticated() and request.GET.get('tapper') %}
+                                    {{ reservation.field(
+                                        disabled=reservation.paid > 0,
+                                        button={
+                                            'data-skip-validation': 'true',
+                                            'data-loading-text': 'Marking as paid',
+                                            'autocomplete': 'off',
+                                        },
+                                    ) }}
+                                {% else %}
+                                    {{ reservation.field(
+                                        disabled=(
+                                            (
+                                                reservation.dinner.is_expired
+                                                or reservation.pk not in user_reservations
+                                            )
+                                            and not user.has_perm('dinner.delete_reservation')
+                                        ),
+                                        button={
+                                            'data-skip-validation': 'true',
+                                            'data-loading-text': 'Removing...',
+                                            'autocomplete': 'off',
+                                        },
+                                    ) }}
+                                {% endif %}
                             </td>
                         </tr>
                         {% endfor %}
                     </table>
                     {% if user.is_authenticated() %}
                     <span class="pull-right">
+                        <a href="?tapper=true" onclick="confirm('Deze pagina is alleen zinnig voor tappers, ben je aan het tappen vandaag?');" class="btn btn-warning btn-xs">
+                            Betalingen Registreren <span class="glyphicon glyphicon-print"></span>
+                        </a>
                         <a href="?print=true" target="_blank" class="btn btn-info btn-xs">
                             Printen <span class="glyphicon glyphicon-print"></span>
                         </a>

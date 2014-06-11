@@ -166,7 +166,7 @@ Eetgelegenheid - inschrijven
                     </table>
                     {% if user.is_authenticated() %}
                     <span class="pull-right">
-                        <a href="?tapper=true" onclick="confirm('Deze pagina is alleen zinnig voor tappers, ben je aan het tappen vandaag?');" class="btn btn-warning btn-xs">
+                        <a href="?tapper=true" onclick="return confirm('Deze pagina is alleen zinnig voor tappers, ben je aan het tappen vandaag?');" class="btn btn-warning btn-xs">
                             Betalingen Registreren <span class="glyphicon glyphicon-print"></span>
                         </a>
                         <a href="?print=true" target="_blank" class="btn btn-info btn-xs">

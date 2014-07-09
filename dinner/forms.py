@@ -122,10 +122,10 @@ class ReservationCreateForm(wtforms.Form):
         wtformsparsleyjs.Length(3, 75),
     ])
     comments = wtformsparsleyjs.StringField(_('Opmerkingen'), validators=[
-        wtformsparsleyjs.Length(0, 100),
+        wtformsparsleyjs.Length(0, 250),
     ])
     allergies = wtformsparsleyjs.StringField(_(u'Allergieën'), validators=[
-        wtformsparsleyjs.Length(0, 100),
+        wtformsparsleyjs.Length(0, 250),
     ])
 
     def __init__(self, user, dinners, formdata=None, obj=None, prefix='',

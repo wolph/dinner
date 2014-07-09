@@ -19,6 +19,9 @@ jQuery(function($){
     visible_inputs
         .on('keyup', saveState)
         .on('change', saveState);
+    
+    visible_inputs.filter('[parsley-rangelength]')
+        .on('keyup', function(){form.parsley('validate')});
 
     /* Making sure our tabs work with the browser history */
     $('#signup_tabs').on('click', 'li[data-date]', function(e){

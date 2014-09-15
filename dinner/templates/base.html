@@ -36,6 +36,7 @@
 {% compress css %}
 <link href="{{ STATIC_URL }}bootstrap/css/bootstrap.css" type="text/css" rel="stylesheet">
 <link href="{{ STATIC_URL }}tagmanager/tagmanager.css" type="text/css" rel="stylesheet">
+<link href="{{ STATIC_URL }}css/darkstrap.css" type="text/css" rel="stylesheet">
 <style type="text/css">
     .table > tbody > tr.bordered{
         border-top: 3px solid #ddd;
@@ -43,18 +44,6 @@
     #signup_tabs .nav > li > a{
         padding: 5px;
     }
-	
-	body{
-		background: none;
-		color: #fff;
-	}
-	
-	.content-right iframe{
-		margin-left: 0;
-		background: yellow;
-	}
-
-
 </style>
 
 <style type="text/css" media="print">
@@ -76,21 +65,21 @@
 </head>
 
 <body>
-<div class="container-fluid">
+<div class="container-fluid" style="background-color: #2f2f2f">
     <nav class="navbar navbar-default" role="navigation">
 
-<!--[if lt IE 9]>
-<div class="alert alert-danger hidden-print">Your browser is unfortunately _way_ too old to be supported.
-Please use a different browser like Chrome or Firefox (or at least, IE9)
-</div>
-<![endif]-->
+    <!--[if lt IE 9]>
+    <div class="alert alert-danger hidden-print">Your browser is unfortunately _way_ too old to be supported.
+    Please use a different browser like Chrome or Firefox (or at least, IE9)
+    </div>
+    <![endif]-->
 
-<div id="small-screen" class="alert alert-warning alert-dismissable hidden-print" style="display: none;">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <a class="alert-link" target="_top" href="{{ request.path }}">
-        You appear to be using a browser with a small screen, click here to go fullscreen.
-    </a>
-</div>
+    <div id="small-screen" class="alert alert-warning alert-dismissable hidden-print" style="display: none;">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <a class="alert-link" target="_top" href="{{ request.path }}">
+            You appear to be using a browser with a small screen, click here to go fullscreen.
+        </a>
+    </div>
 
     <a class="navbar-brand" href="{% url 'dinner:index' %}">{% block header_title %}Dinner Signup{% endblock header_title %}</a>
         <div class="navbar-header pull-right">
@@ -144,7 +133,7 @@ Please use a different browser like Chrome or Firefox (or at least, IE9)
         parent.document.body.onresize();
 
         try{
-            if(top.location.href == 'http://webgui.koornbeurs.nl/opschepperij/aanmelden?op=auth;method=logout');
+            if(new RegExp('http://webgui.koornbeurs.nl/').test(top.location.href))
                 top.location.href = 'http://www.koornbeurs.nl/opschepperij-2/';
         }catch(e){
         }

@@ -158,7 +158,7 @@ COMPRESS_PRECOMPILERS = (
     ('text/x-scss', 'sass --scss {infile} {outfile}'),
 )
 
-DEFAULT_DINNER_DAYS = 5
+DEFAULT_DINNER_DAYS = 4
 DEFAULT_DINNER_PRICE = decimal.Decimal('4')
 DEFAULT_DINNER_COST = decimal.Decimal('2.3')
 DEFAULT_DINNER_COURSES = [
@@ -202,6 +202,7 @@ TAGS_INPUT_MAPPINGS = {
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 365
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+SESSION_COOKIE_DOMAIN = '.koornbeurs.nl'
 
 LOGIN_URL = '/opschepperij/aanmelden?op=auth;method=init'
 LOGOUT_URL = '/opschepperij/aanmelden?op=auth;method=logout'

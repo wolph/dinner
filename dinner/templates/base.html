@@ -77,7 +77,7 @@
     <div id="small-screen" class="alert alert-warning alert-dismissable hidden-print" style="display: none;">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         <a class="alert-link" target="_top" href="{{ request.path }}">
-            You appear to be using a browser with a small screen, click here to go fullscreen.
+            Het lijkt erop dat je een nogal kleine browser gebruikt, klik hier om de inschrijver full-screen te openen.
         </a>
     </div>
 
@@ -125,6 +125,7 @@
 {% endcompress %}
 
 <script type="text/javascript" charset="utf-8">
+    try{
     if(parent.document != document){
         parent.document.body.onresize=(function(){
             var width = 1 * parent.document.body.clientWidth;
@@ -132,11 +133,15 @@
         });
         parent.document.body.onresize();
 
-        try{
-            if(new RegExp('http://webgui.koornbeurs.nl/').test(top.location.href))
-                top.location.href = 'http://www.koornbeurs.nl/opschepperij-2/';
-        }catch(e){
-        }
+        if(new RegExp('http://webgui.koornbeurs.nl/').test(top.location.href))
+            top.location.href = 'http://www.koornbeurs.nl/opschepperij-2/';
+    }
+    }catch(e){
+        document.body.onresize=(function(){
+            var width = 1 * document.body.clientWidth;
+            $('#small-screen').toggle(width != 630);
+        });
+        document.body.onresize();
     }
 </script>
 

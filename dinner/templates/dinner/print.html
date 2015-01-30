@@ -13,21 +13,26 @@ Eters {{ date }}
     <h4>{{ course }} <span class="badge">{{ reservations|count }} </span></h4>
     <table class="table">
         <tr>
-            <th>{{ _('Betaald') }}</th>
+            <th>{{ _('Bet.') }}</th>
             <th>{{ _('Naam') }}</th>
             <th>{{ _('Email') }}</th>
-            <th>{{ _('Allergieën') }}</th>
-            <th>{{ _('Opmerkingen') }}</th>
+            <th>{{ _('Allergieën') }} &amp; {{ _('Opmerkingen') }}</th>
         </tr>
 
         {% if user.is_authenticated() %}
         {% for reservation in reservations %}
         <tr>
-            <td><div style="width: 20px; height: 20px; display: block; border: 1px solid #ccc;"></div></td>
+            <td>
+                <div style="width: 20px; height: 20px; display: block; border: 1px solid #ccc;"></div>
+                {{ reservation.created_at.strftime('%a %H:%M') }}
+            </td>
             <td>{{ reservation.name }}</td>
             <td>{{ reservation.email }}</td>
-            <td>{{ reservation.allergies }}</td>
-            <td>{{ reservation.comments }}</td>
+            <td>
+                {{ reservation.allergies }}
+                {% if reservation.allergies and reservation.comments %}<br>{%endif %}
+                {{ reservation.comments }}
+            </td>
         </tr>
         {% endfor %}
         {% else %}

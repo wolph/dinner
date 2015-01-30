@@ -57,6 +57,7 @@ class Migration(SchemaMigration):
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('email', self.gf('django.db.models.fields.EmailField')(max_length=75)),
             ('comments', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('allergies', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('dinner', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['dinner.Dinner'])),
             ('course', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['dinner.Course'])),
             ('paid', self.gf('django.db.models.fields.DecimalField')(default=0, max_digits=8, decimal_places=2)),
@@ -143,6 +144,7 @@ class Migration(SchemaMigration):
         },
         u'dinner.reservation': {
             'Meta': {'ordering': "['dinner__date']", 'object_name': 'Reservation'},
+            'allergies': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'comments': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'course': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dinner.Course']"}),
             'dinner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dinner.Dinner']"}),

@@ -114,7 +114,7 @@ class Course(base_models.ModelBase):
         )
 
 
-class Reservation(base_models.NameMixin, base_models.ModelBase):
+class Reservation(base_models.NameMixin, base_models.CreatedAtModelBase):
     user = models.ForeignKey('auth.User', null=True, blank=True)
     name = models.CharField(max_length=100)
     email = models.EmailField()

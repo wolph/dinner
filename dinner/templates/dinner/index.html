@@ -4,6 +4,9 @@
 
 {% block header_title %}
 Eetgelegenheid - inschrijven
+{% for dinner in create_form.dinners if dinner.date == date %}
+({{ dinner.end_time|timeuntil }} to go)
+{% endfor %}
 {% endblock header_title %}
 
 {% block body %}

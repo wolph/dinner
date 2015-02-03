@@ -59,10 +59,12 @@ class Dinner(base_models.ModelBase):
         return ('dinner:index', [str(self.date)])
 
     @property
+    def end_time(self):
+        return datetime.datetime.combine(self.date, settings.DINNER_SIGNUP_UNTIL)
+
+    @property
     def is_expired(self):
-        end_time = datetime.datetime.combine(self.date, settings.DINNER_SIGNUP_UNTIL)
-        now = datetime.datetime.now()
-        return end_time < now
+        return self.end_time < datetime.datetime.now()
 
     def get_cooks(self):
         cooks = None

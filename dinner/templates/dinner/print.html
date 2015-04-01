@@ -11,7 +11,7 @@ Eters {{ date }}
 
 {% for course, reservations in course_reservations.iteritems() %}
     <h4>{{ course }} <span class="badge">{{ reservations|count }} </span></h4>
-    <table class="table">
+    <table class="table table-condensed">
         <tr>
             <th>{{ _('Bet.') }}</th>
             <th>{{ _('Naam') }}</th>
@@ -50,8 +50,8 @@ Eters {{ date }}
 <script type="text/javascript" charset="utf-8">
 var STATE_KEY = '{{ app }}.{{ view }}.form';
 var BASE_URL = '{{ url('dinner:index') }}';
-//window.print();
-//setTimeout('self.close();', 100);
+window.print();
+setTimeout('self.close();', 100);
 </script>
 {% endblock footer_js %}
 

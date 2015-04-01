@@ -23,7 +23,7 @@ Eters {{ date }}
         {% for reservation in reservations %}
         <tr>
             <td>
-                <div style="width: 20px; height: 20px; display: block; border: 1px solid #ccc;"></div>
+                <div style="width: 15px; height: 15px; display: inline-block; margin-top: 2px; margin-right: 2px; border: 1px solid #ccc;"></div>
                 {{ reservation.created_at.strftime('%a %H:%M') }}
             </td>
             <td>{{ reservation.name }}</td>
@@ -50,8 +50,8 @@ Eters {{ date }}
 <script type="text/javascript" charset="utf-8">
 var STATE_KEY = '{{ app }}.{{ view }}.form';
 var BASE_URL = '{{ url('dinner:index') }}';
-window.print();
-setTimeout('self.close();', 100);
+//window.print();
+//setTimeout('self.close();', 100);
 </script>
 {% endblock footer_js %}
 

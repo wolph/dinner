@@ -203,6 +203,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 365
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 SESSION_COOKIE_DOMAIN = '.koornbeurs.nl'
+SESSION_COOKIE_NAME = 'session_id'
 
 LOGIN_URL = '/opschepperij/aanmelden?op=auth;method=init'
 LOGOUT_URL = '/opschepperij/aanmelden?op=auth;method=logout'

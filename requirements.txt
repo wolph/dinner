@@ -1,6 +1,6 @@
 BeautifulSoup==3.2.1
 Coffin==2.0.1
-Django==1.8.1
+Django==1.8.2
 Jinja2==2.7.3
 MarkupSafe==0.23
 MySQL-python==1.2.5
@@ -13,7 +13,7 @@ django-appconf==1.0.1
 django-compressor==1.5
 django-devserver==0.8.0
 django-inspectdb==0.2.1
-django-reversion==1.8.6
+django-reversion==1.8.7
 django-tags-input==2.0.0
 django-utils2==2.0.0
 gunicorn==19.3.0
@@ -29,5 +29,5 @@ pytz==2015.4
 raven==5.3.1
 six==1.9.0
 sqlparse==0.1.15
-virtualenv==12.1.1
+virtualenv==13.0.0
 wsgiref==0.1.2

@@ -61,10 +61,17 @@ def index(request, date, begin_date, end_date):
         obj.name = '%s %s' % (
             request.user.first_name, request.user.last_name)
 
+    import sys
+    print >> sys.stderr, ''
+    print >> sys.stderr, 'session id', request.session.session_key
+    print >> sys.stderr, 'session', request.session
+
     if isinstance(request.session.get('reservations'), dict):
         user_reservations = request.session['reservations']
     else:
         user_reservations = request.session['reservations'] = dict()
+
+    print >> sys.stderr, 'user_reservations', user_reservations
 
     # Create new reservations
     create_form = forms.ReservationCreateForm(
@@ -96,6 +103,10 @@ def index(request, date, begin_date, end_date):
             if reservation.user == request.user:
                 user_reservations[reservation.pk] = reservation
 
+    print >> sys.stderr, 'session user_reservations', \
+            request.session['reservations']
+    print >> sys.stderr, 'user_reservations', user_reservations
+
     pay_form = None
     remove_form = None
     if request.GET.get('tapper'):
@@ -123,6 +134,7 @@ def index(request, date, begin_date, end_date):
         )
         if not done and data and remove_form.validate():
             for reservation in remove_form.save():
+                print >> sys.stderr, 'removing', reservation, reservation.pk
                 user_reservations.pop(reservation.pk, None)
 
             request.session.modified = True

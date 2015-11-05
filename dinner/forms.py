@@ -1,4 +1,6 @@
 # vim: set fileencoding=utf-8 :
+import sys
+import datetime
 from django.conf import settings
 import wtforms
 import wtformsparsleyjs
@@ -163,6 +165,9 @@ class ReservationCreateForm(wtforms.Form):
             comments=data['comments'],
             allergies=data['allergies'],
         )
+        print >> sys.stderr, ''
+        print >> sys.stderr, datetime.datetime.now(),
+        print >> sys.stderr, kwargs
 
         reservations = []
         for dinner in self.dinners:
@@ -171,6 +176,8 @@ class ReservationCreateForm(wtforms.Form):
                 dinner.is_expired
                 and not self.user.has_perm('dinner.add_reservation')
             ):
+                print >> sys.stderr, ('Not creating reservation for dinner %r'
+                                      ) % dinner
                 continue
 
             values = self.data[dinner.field.name]
@@ -179,6 +186,10 @@ class ReservationCreateForm(wtforms.Form):
                     dinner=dinner,
                     course=self.courses[value],
                     **kwargs))
+
+                print >> sys.stderr, ('Created reservation: %r for course %r'
+                                      ) % (reservations[-1],
+                                           self.courses[value])
 
         return reservations
 
@@ -198,11 +209,18 @@ class ReservationRemoveForm(wtforms.Form):
             if k.startswith('reservation_'):
                 ids |= set(vs)
 
+        print >> sys.stderr, ''
+        print >> sys.stderr, datetime.datetime.now(),
+        print >> sys.stderr, 'Trying to delete: %r :: %r' % (ids, self.user)
+
         if not self.user.has_perm('dinner.delete_reservation'):
+            print >> sys.stderr, 'user_reservations', self.user_reservations
             for id_ in ids.copy():
                 reservation = self.user_reservations.get(id_)
                 if not reservation:
                     ids.remove(id_)
+
+        print >> sys.stderr, 'After filtering: %r' % ids
 
         reservations_list = []
         if ids:
@@ -211,6 +229,8 @@ class ReservationRemoveForm(wtforms.Form):
             # of the delete
             reservations_list += list(reservations_query)
             reservations_query.delete()
+
+        print >> sys.stderr, 'deleted %s' % reservations_list
 
         return reservations_list
 

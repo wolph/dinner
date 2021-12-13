@@ -20,7 +20,7 @@ gunicorn==18.0
 guppy==0.1.10
 ipdb==0.8
 ipython==1.2.1
-lxml==3.3.5
+lxml==4.6.5
 pep8==1.4.6
 pyflakes==0.7.3
 python-dateutil==2.2
